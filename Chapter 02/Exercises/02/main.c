@@ -10,6 +10,9 @@ int main(void)
     return 0;
 }
 
+The directives are:
+#include <stdio.h>
+
 It prints:
 Parkinson's law
 Work expands so as to fille the time
