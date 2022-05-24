@@ -1,24 +1,17 @@
 /*
 Suppose that we call scanf as follows: 
 
-n = scanf("%d%f%d", &i, &x, &j); 
+scanf("%f%d%f", &x, &i, &y);
 
-(i. j. and n are int variables and x is a float variable.) Assuming that the input stream 
-contains the characters shown, give the values of i, j. n. and x after the call. In addition, 
-indicate which characters were consumed by the call. 
+If the user enters
+12.3 45.6 789
 
-(a) 10*20*30D 
-i = 10, n = 1, 1 and 0 consumed by the call.
-x = x, n = 0, * consumed by the call.
-j = j, n = 0, * consumed by the call.
+what will be the values of x, i, and y after the call? (Assume that x and y are float
+variables and i is an int variable)
 
-(b) 1.0*2.0*3.00 
-i = 1, n = 1, 1 consumed by the call.
-x = 0.1, n = 2, . and 1 consumed by the call.
-j = j, n = 0, no characters consumed.
-
-(C) 0.1*0.2*0.30 
-(d) . 1* .2* .30 
+x = 12.3
+i = 45
+y = 0.6
 */
 
 #include <stdio.h>
@@ -26,16 +19,12 @@ j = j, n = 0, no characters consumed.
 
 int main()
 {
-    int n;
-    int i;
     float x;
-    int j;
+    int i;
+    float y;
 
-    n = scanf("%d%f%d", &i, &x, &j);
-    printf("i = %d, n = %d, 1 and 0 consumed by the call.\n", i, n);
-    printf("x = %f, n = %d, * consumed by the call.\n", x, n);
-    printf("j = %d, n = %d, * consumed by the call.\n", j, n);
-
+    scanf("%f%d%f", &x, &i, &y);
+    printf("x = %f, i = %d, y = %f\n", x, i, y);
 
     return EXIT_SUCCESS;
 }
