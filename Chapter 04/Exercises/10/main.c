@@ -2,53 +2,54 @@
 Show the output produced by each of the following program fragments. Assume that i, j,
 and k are int variables.
 
-(a) i = 1;
-    printf("%d ", i++ - 1);
-    printf("%d", i);
-
-    0 2
-
-(b) i = 10; j = 5;
-    printf("%d ", i++ - ++j);
+(a) i = 6;
+    j = i += i;
     printf("%d %d", i, j);
 
-    4 11 6
+    12 12
 
-(c) i = 7; j = 8;
-    printf("%d ", i++ - --j);
+(b) i = 5;
+    j = (i -= 2) + 1;
     printf("%d %d", i, j);
 
-    0 1 7
+    3 4
 
-(d) i = 3; j = 4; k = 5;
-    printf("%d ", i++ - j++ + --k);
-    printf("%d %d %d", i, j, k);
+(c) i = 7;
+    j = 6 + (i = 2.5);
+    printf("%d %d", i, j);
 
-    3 4 5 4
+    2 8
+
+(d) i = 2; j = 8;
+    j = (i = 6) + (j = 3);
+    printf("%d %d", i, j);
+
+    6 9
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(void)
-{   
-    int i = 1;
-    printf("%d ", i++ - 1);
-    printf("%d\n", i);
+{
 
-    int j = 5;
-    i = 10; j = 5;
-    printf("%d ", i++ - ++j);
+    int i = 6;
+    int j;
+    j = i += i;
     printf("%d %d\n", i, j);
 
-    i = 7; j = 8;
-    printf("%d ", i++ - --j);
+    i = 5;
+    j = (i -= 2) + 1;
     printf("%d %d\n", i, j);
 
-    int k;
-    i = 3; j = 4; k = 5;
-    printf("%d ", i++ - j++ + --k);
-    printf("%d %d %d\n", i, j, k);
+    i = 7;
+    j = 6 + (i = 2.5);
+    printf("%d %d\n", i, j);
+    
+    i = 2; j = 8;
+    j = (i = 6) + (j = 3);
+    printf("%d %d\n", i, j);
+
 
     return EXIT_SUCCESS;
 }
