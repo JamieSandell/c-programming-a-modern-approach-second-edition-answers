@@ -17,12 +17,8 @@ else if (age < 13)
 
 int main(void)
 {
-    int age = 13;
-    bool teenager = false;
-    if (age >= 13 && age <= 19)
-    {
-        teenager = true;
-    }
+    int age = 35;
+    bool teenager = (age >= 13 && age <= 19 ? true : false);
 
     printf("%s\n", teenager ? "teenager" : "not a teenager");
 
