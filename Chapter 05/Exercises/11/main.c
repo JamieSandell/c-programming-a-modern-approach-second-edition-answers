@@ -25,10 +25,31 @@ ment as simple as possible.
 
 int main(void)
 {
-    int area_code = 229;
+    int area_code = 770;
 
     switch (area_code)
     {
-        
+        case 229:
+            printf("Albany");
+            break;
+        case 404: // fall through
+        case 470: // fall through
+        case 678: // fall through
+        case 770:
+            printf("Atlanta");
+            break;
+        case 706: // fall through
+        case 762:
+            printf("Columbus");
+            break;
+        case 478:
+            printf("Macon");
+            break;
+        case 912:
+            printf("Savannah");
+            break;
+        default:
+            printf("Area code not recognized.");
+            break;
     }
 }
