@@ -1,5 +1,5 @@
 /*
-In one state, single residents are subject to the following income tac:
+In one state, single residents are subject to the following income tax:
 
 Income          Amount of tax
 Not over $750   1% of income
@@ -17,15 +17,49 @@ int main(void)
 {
     printf("Enter the amount of taxable income: ");
     float taxable_income;
+    float over_amount;
     scanf("%2f", &taxable_income);
 
-    float tax_due;
     float base_tax;
-    float percentage_tax;
+    int percentage_tax;
     if (taxable_income <= 750)
     {
-        
+        base_tax = 0.01f * taxable_income;
+        percentage_tax = 0;
+        over_amount = 0;
     }
+    else if (taxable_income <= 2250)
+    {
+        base_tax = 7.50f;
+        percentage_tax = 0.02f;
+        over_amount = 750.00f;
+    }
+    else if(taxable_income <= 3750)
+    {
+        base_tax = 37.50f;
+        percentage_tax = 0.03f;
+        over_amount = 2250.00f;
+    }
+    else if (taxable_income <= 5250)
+    {
+        base_tax = 82.50f;
+        percentage_tax = 0.04f;
+        over_amount = 3750.00f;
+    }
+    else if (taxable_income <= 7000)
+    {
+        base_tax = 142.50f;
+        percentage_tax = 0.05f;
+        over_amount = 5250.00f;
+    }
+    else
+    {
+        base_tax = 230.00f;
+        percentage_tax = 0.06f;
+        over_amount = 5250.00f;
+    }
+
+    printf("Tax due: $%.2f\n", base_tax + (percentage_tax * (taxable_income - over_amount)));
 
     return EXIT_SUCCESS;
 }
