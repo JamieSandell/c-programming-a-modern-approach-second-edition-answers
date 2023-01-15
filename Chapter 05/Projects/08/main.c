@@ -24,6 +24,7 @@ the departure times, also expressed in minutes since midnight. For example, 13:1
 than to any of the other departure times.
 */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -78,12 +79,28 @@ int main(void)
     int arrival_time_6_minutes = 55;
     int arrival_time_6_minutes_since_midnight = arrival_time_6_hours * 60 + arrival_time_6_minutes;
 
-    int departure_time_6_hours = 15;
-    int departure_time_6_minutes = 45;
-    int departure_time_6_minutes_since_midnight = departure_time_6_hours * 60 + departure_time_6_minutes;
-    int arrival_time_6_hours = 17;
-    int arrival_time_6_minutes = 55;
-    int arrival_time_6_minutes_since_midnight = arrival_time_6_hours * 60 + arrival_time_6_minutes;
+    int departure_time_7_hours = 19;
+    int departure_time_7_minutes = 00;
+    int departure_time_7_minutes_since_midnight = departure_time_7_hours * 60 + departure_time_7_minutes;
+    int arrival_time_7_hours = 21;
+    int arrival_time_7_minutes = 20;
+    int arrival_time_7_minutes_since_midnight = arrival_time_7_hours * 60 + arrival_time_7_minutes;
+
+    int departure_time_8_hours = 21;
+    int departure_time_8_minutes = 45;
+    int departure_time_8_minutes_since_midnight = departure_time_8_hours * 60 + departure_time_8_minutes;
+    int arrival_time_8_hours = 23;
+    int arrival_time_8_minutes = 58;
+    int arrival_time_8_minutes_since_midnight = arrival_time_8_hours * 60 + arrival_time_8_minutes;
+
+    int difference = abs(minutes_since_midnight - departure_time_1_minutes_since_midnight);
+    int closest_match_in_minutes_since_midnight = departure_time_1_minutes_since_midnight;
+    bool closest_match_found = false;
+    if (difference == 0)
+    {
+        closest_match_found = true;
+    }
+    
 
     return EXIT_SUCCESS;
 }
