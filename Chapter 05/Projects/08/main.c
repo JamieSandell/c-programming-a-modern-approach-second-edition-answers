@@ -33,7 +33,7 @@ int main(void)
     printf("Enter a 24-hour time: ");
     int input_hours;
     int input_minutes;
-    scanf("%d:%d\n");
+    scanf("%d:%d", &input_hours, &input_minutes);
     int minutes_since_midnight = input_hours * 60 + input_minutes;
 
     // Store times in 24-hour clock, and convert in memory when required
@@ -98,14 +98,13 @@ int main(void)
     int closest_match_in_minutes_since_midnight_departure_time = departure_time_1_minutes_since_midnight;
     int closest_match_in_minutes_since_midnight_arrival_time = arrival_time_1_minutes_since_midnight;
     bool closest_match_found = false;
-    int previous_absolute_difference;
-    if (absolute_difference == 0)
+    int smallest_absolute_difference = absolute_difference;
+    if (absolute_difference  == 0)
     {
         closest_match_found = true;
     }
     if (!closest_match_found)
     {
-        previous_absolute_difference = absolute_difference;
         absolute_difference = abs(minutes_since_midnight - departure_time_2_minutes_since_midnight);
         if (absolute_difference == 0)
         {
@@ -113,15 +112,15 @@ int main(void)
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_2_minutes_since_midnight;
             closest_match_found = true;
         }
-        else if(absolute_difference < previous_absolute_difference)
+        else if(absolute_difference < smallest_absolute_difference)
         {
+            smallest_absolute_difference = absolute_difference;
             closest_match_in_minutes_since_midnight_departure_time = departure_time_2_minutes_since_midnight;
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_2_minutes_since_midnight;
         }
     }
     if (!closest_match_found)
     {
-        previous_absolute_difference = absolute_difference;
         absolute_difference = abs(minutes_since_midnight - departure_time_3_minutes_since_midnight);
         if (absolute_difference == 0)
         {
@@ -129,15 +128,15 @@ int main(void)
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_3_minutes_since_midnight;
             closest_match_found = true;
         }
-        else if(absolute_difference < previous_absolute_difference)
+        else if(absolute_difference < smallest_absolute_difference)
         {
+            smallest_absolute_difference = absolute_difference;
             closest_match_in_minutes_since_midnight_departure_time = departure_time_3_minutes_since_midnight;
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_3_minutes_since_midnight;
         }
     }
     if (!closest_match_found)
     {
-        previous_absolute_difference = absolute_difference;
         absolute_difference = abs(minutes_since_midnight - departure_time_4_minutes_since_midnight);
         if (absolute_difference == 0)
         {
@@ -145,15 +144,15 @@ int main(void)
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_4_minutes_since_midnight;
             closest_match_found = true;
         }
-        else if(absolute_difference < previous_absolute_difference)
+        else if(absolute_difference < smallest_absolute_difference)
         {
+            smallest_absolute_difference = absolute_difference;
             closest_match_in_minutes_since_midnight_departure_time = departure_time_4_minutes_since_midnight;
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_4_minutes_since_midnight;
         }
     }
     if (!closest_match_found)
     {
-        previous_absolute_difference = absolute_difference;
         absolute_difference = abs(minutes_since_midnight - departure_time_5_minutes_since_midnight);
         if (absolute_difference == 0)
         {
@@ -161,15 +160,15 @@ int main(void)
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_5_minutes_since_midnight;
             closest_match_found = true;
         }
-        else if(absolute_difference < previous_absolute_difference)
+        else if(absolute_difference < smallest_absolute_difference)
         {
+            smallest_absolute_difference = absolute_difference;
             closest_match_in_minutes_since_midnight_departure_time = departure_time_5_minutes_since_midnight;
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_5_minutes_since_midnight;
         }
     }
     if (!closest_match_found)
     {
-        previous_absolute_difference = absolute_difference;
         absolute_difference = abs(minutes_since_midnight - departure_time_6_minutes_since_midnight);
         if (absolute_difference == 0)
         {
@@ -177,15 +176,15 @@ int main(void)
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_6_minutes_since_midnight;
             closest_match_found = true;
         }
-        else if(absolute_difference < previous_absolute_difference)
+        else if(absolute_difference < smallest_absolute_difference)
         {
+            smallest_absolute_difference = absolute_difference;
             closest_match_in_minutes_since_midnight_departure_time = departure_time_6_minutes_since_midnight;
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_6_minutes_since_midnight;
         }
     }
     if (!closest_match_found)
     {
-        previous_absolute_difference = absolute_difference;
         absolute_difference = abs(minutes_since_midnight - departure_time_7_minutes_since_midnight);
         if (absolute_difference == 0)
         {
@@ -193,15 +192,15 @@ int main(void)
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_7_minutes_since_midnight;
             closest_match_found = true;
         }
-        else if(absolute_difference < previous_absolute_difference)
+        else if(absolute_difference < smallest_absolute_difference)
         {
+            smallest_absolute_difference = absolute_difference;
             closest_match_in_minutes_since_midnight_departure_time = departure_time_7_minutes_since_midnight;
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_7_minutes_since_midnight;
         }
     }
     if (!closest_match_found)
     {
-        previous_absolute_difference = absolute_difference;
         absolute_difference = abs(minutes_since_midnight - departure_time_8_minutes_since_midnight);
         if (absolute_difference == 0)
         {
@@ -209,15 +208,15 @@ int main(void)
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_8_minutes_since_midnight;
             closest_match_found = true;
         }
-        else if(absolute_difference < previous_absolute_difference)
+        else if(absolute_difference < smallest_absolute_difference)
         {
+            smallest_absolute_difference = absolute_difference;
             closest_match_in_minutes_since_midnight_departure_time = departure_time_8_minutes_since_midnight;
             closest_match_in_minutes_since_midnight_arrival_time = arrival_time_8_minutes_since_midnight;
         }
     }
     // output the result
-    // need to do the below for the arrival time and departure time, possible for arrival time to be a.m. but the departure time to be p.m.
-    int departure_time_hours_in_12_hour_format = closest_match_in_minutes_since_midnight_departure_time * 60;
+    int departure_time_hours_in_12_hour_format = closest_match_in_minutes_since_midnight_departure_time / 60;
     bool departure_time_is_am = true;
     if (departure_time_hours_in_12_hour_format > 12)
     {
@@ -225,14 +224,31 @@ int main(void)
         departure_time_is_am = false;
     }
     int minutes = closest_match_in_minutes_since_midnight_departure_time % 60;
-    printf("Closest departure time is ");
+    printf("Closest departure time is %d:%.2d ", departure_time_hours_in_12_hour_format, minutes);
     if (departure_time_is_am)
     {
-        printf("");
+        printf("a.m.");
     }
     else
     {
-        printf("");
+        printf("p.m.");
+    }
+    int arrival_time_hours_in_12_hour_format = closest_match_in_minutes_since_midnight_arrival_time / 60;
+    bool arrival_time_is_am = true;
+    if (arrival_time_hours_in_12_hour_format > 12)
+    {
+        arrival_time_hours_in_12_hour_format -= 12;
+        arrival_time_is_am = false;
+    }
+    minutes = closest_match_in_minutes_since_midnight_arrival_time % 60;
+    printf(", arriving at %d:%.2d ", arrival_time_hours_in_12_hour_format, minutes);
+    if (arrival_time_is_am)
+    {
+        printf("a.m.\n");
+    }
+    else
+    {
+        printf("p.m.\n");
     }
 
     return EXIT_SUCCESS;
