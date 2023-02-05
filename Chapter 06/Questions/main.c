@@ -115,5 +115,56 @@ while (true)
 
 11. What output does the following program fragment produce?
 
+sum = 0;
+for (i = 0; i < 10; i++) {
+    if (i % 2)
+        continue;
+    sum += i;
+}
+printf("%d\n", sum);
 
+0 - 0 % 0 = 0 so 0 += 0 = 0
+1 - 1 % 2 = 0.5 so continue
+2 - 2 % 2 = 0 so 0 += 2 = 2
+3 - 3 % 2 = 1 so continue
+4 - 4 % 2 = 0 so 2 += 4 = 6
+5 - 5 % 2 = 1 so continue
+6 - 6 % 2 = 0 so 6 += 6 = 12
+7 - 7 % 2 = 1 so continue
+8 - 8 % 2 = 0 so 12 += 8 = 20
+9 - 9 % 2 = 1 so continue
+
+prints 20
+
+12. The following "prime-testing" loop appeared in Section 6.4 as an example:
+
+for (d = 2; d < n; d++)
+    if (n % d == 0)
+        break;
+
+This loop isn't very efficient. It's not necessary to divide n by all numbers between 2 and
+n - 1 to determine whether it's prime. In fact, we only need check divisors up to the square
+root of n. Modify the loop to take advantage of this fact. Hint: Don't try to compute the
+square root of n; instead, compare d * d with n.
+
+for (d = 2; d * d <= n; d++)
+    if (n % d == 0)
+        break;
+
+13. Rewrite the following loop so that its body is empty:
+
+for (n = 0; m > 0; n++)
+    m /= 2;
+
+for (n = 0; m > 0; n++, m /= 2)
+
+14. Find the error in the following program fragment and fix it.
+
+if (n % 2 == 0);
+    printf("n is even\n");
+
+The semicolon at the end of the if, means the printf is always printed. It should be:
+
+if (n % 2 == 0)
+    printf("n is even\n");
 */
