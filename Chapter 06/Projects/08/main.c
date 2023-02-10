@@ -22,29 +22,48 @@ so, it prints a new-line character.
 
 int main(void)
 {
-    int days_in_month, week_start_day, date_of_first_saturday;
+    int days_in_month, week_start_day;
+    int current_date_of_month = 1;
+    int day_of_the_week = week_start_day;
 
     printf("Enter number of days in month: ");
     scanf("%d", &days_in_month);
     printf("Enter starting day of the week (1=Sun, 7=Sat): ");
     scanf("%d", &week_start_day);
-    date_of_first_saturday = 
-
-    for (int i = 1; i < week_start_day; ++i)
+    
+    // Print gaps until the week start day.
+    if (week_start_day < 7)
     {
-        if (i = 7)
+        for (; current_date_of_month < week_start_day; ++current_date_of_month)
         {
-            printf("\n%d", i);
+            if (current_date_of_month == 7)
+            {
+                printf("3%d\n", current_date_of_month);
+            }
+            else
+            {
+                printf("   ");
+            }
+        }
+    }
+    else if(week_start_day == 7)
+    {
+        printf("%21d\n", 1);
+        current_date_of_month = 2;
+        week_start_day = 0;
+    }
+
+    for (; current_date_of_month <= days_in_month; ++current_date_of_month, ++week_start_day)
+    {
+        if (week_start_day == 7)
+        {
+            printf("%3d\n", current_date_of_month);
+            week_start_day = 0;
         }
         else
         {
-            printf(" ");
+            printf("%3d", current_date_of_month);
         }
-    }
-
-    for (int i = 1; i < days_in_month; ++i)
-    {
-        if (i)
     }
 
     return EXIT_SUCCESS;
