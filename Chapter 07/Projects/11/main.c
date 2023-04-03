@@ -21,7 +21,7 @@ int main(void)
     scanf("%c", &initial);
 
     // scanf will put characters back on the buffer as we can only fit one character in initial.
-    // read them all and ignore them
+    // read up until the first space
     while ((input = getchar()) != ' ') { ; }
 
     // ignores spaces between the first and last names
@@ -31,7 +31,7 @@ int main(void)
     do
     {
         putchar(input);
-    } while ((input != getchar()) != '\n' && input != ' ');
+    } while ((input = getchar()) != '\n' && input != ' ');
 
     printf(", %c.\n", initial);    
 
