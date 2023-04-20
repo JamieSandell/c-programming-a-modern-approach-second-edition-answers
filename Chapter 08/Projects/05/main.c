@@ -1,5 +1,5 @@
 /*
-Modify the interest.c program of Section 8.1 so that it compound interest monthly
+Modify the interest.c program of Section 8.1 so that it compounds interest monthly
 instead of annually. The form of the output shouldn't change: the balance should still be
 shown at annual intervals.
 */
@@ -30,7 +30,16 @@ int main(void)
 
     for (int year = 1; year <= num_years; year++)
     {
-        printf("%3d     ", year);
+        printf("%3d    ", year);
+        for (int i = 0; i < NUM_RATES; i++)
+        {
+            for (int month = 1; month <= 12; month++)
+            {
+                value[i] *= (double) ((low_rate + i) / 12.0 / 100.0 + 1.0);
+            }                
+            printf("%7.2f", value[i]);
+        }
+        printf("\n");
     }
 
     return EXIT_SUCCESS;
