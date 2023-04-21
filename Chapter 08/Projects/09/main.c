@@ -21,7 +21,7 @@ After generating a number, look at its remainder when divided by 4. There are fo
 values for the remainder -- 0, 1, 2 and 3 -- indiciating the direction of the next move. Before
 performing a move, check that (a) it won't go outside the array, and (b) it doesn't take us to
 an element that already has a letter assigned. If either condition is violated, try moving in
-another direction. If all four directions are blocked, thr program must terminate. Here's an
+another direction. If all four directions are blocked, the program must terminate. Here's an
 example of premature termination:
 
 A B G H I . . . . .
@@ -41,52 +41,115 @@ Y is blocked on all four sides, so there's no place to put Z.
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define SIZE 10
+#define MOVE_SIZE 4
 
 int main(void)
 {
-    char grid[SIZE][SIZE] = {'.'};
-    int destination_x;
-    int destination_y;
+    char grid[SIZE][SIZE];
+    int destination_x = 0;
+    int destination_y = 0;
     int x = 0;
     int y = 0;
     int directions_blocked_count = 0;
     int direction;
-    bool valid_move = false;
+    bool invalid_moves[MOVE_SIZE] = {false}; // represents each direction, left, top, right and up (in that order)
+    bool random_direction_selected;
+    bool valid_move = true;
+
+    memset(grid, '.', sizeof(char) * SIZE * SIZE);
 
     srand((unsigned) time(NULL));
-    // suit = rand() % NUM_SUITS;
 
-    for (int letter = 'A'; letter < 'Z' && directions_blocked_count < 4; letter++)
+    for (int letter = 'A' - 1; letter < 'Z' && directions_blocked_count < 4;)
     {
-        grid[x][y] = letter;
-        direction = rand() % 4;
-        while (!valid_move)
+        if (valid_move)
         {
-            switch (direction)
+            letter++;
+            grid[x][y] = letter;
+        }
+
+        random_direction_selected = false;        
+        
+        while (!random_direction_selected)
+        {
+            direction = rand() % 4;
+            if (!invalid_moves[direction])
             {
-                case 0: // move left
-                {
-                    destination_x = x - y;
-                    destination_y = y;
-                    break;
-                }
-                case 1: // move up
-                {
-                    destination_x = x;
-                    destination_y = y - 1;
-                    break;
-                }
-                default:
-                {
-                    printf("Error: invalid move direction");
-                    return EXIT_FAILURE;
-                }
+                random_direction_selected = true;
+            }
+        }        
+
+        switch (direction)
+        {
+            case 0: // move left
+            {
+                destination_x = x - 1;
+                destination_y = y;
+                break;
+            }
+            case 1: // move up
+            {
+                destination_x = x;
+                destination_y = y - 1;
+                break;
+            }
+            case 2: // move right
+            {
+                destination_x = x + 1;
+                destination_y = y;
+                break;
+            }
+            case 3: // move down
+            {
+                destination_x = x;
+                destination_y = y + 1;
+                break;
+            }
+            default:
+            {
+                printf("Error: invalid move direction");
+                return EXIT_FAILURE;
             }
         }
-        
+
+        if (!(destination_x < 0 || destination_x >= SIZE || destination_y < 0 || destination_y > SIZE)) // inside bounds?
+        {
+            if (grid[destination_x][destination_y] == '.') // have we already visited this grid position?
+            {
+                x = destination_x;
+                y = destination_y;
+                for (int i = 0; i < MOVE_SIZE; i++)
+                {
+                    invalid_moves[i] = false;
+                }
+                directions_blocked_count = 0;
+                valid_move = true;
+            }
+            else
+            {
+                directions_blocked_count++;
+                invalid_moves[direction] = true;
+                valid_move = false;
+            }
+        }
+        else // outside bounds
+        {
+            directions_blocked_count++;
+            valid_move = false;
+        }   
+    }
+
+    for (int x = 0; x < SIZE; x++)
+    {
+        for (int y = 0; y < SIZE; y++)
+        {
+            printf("%c ", grid[x][y]);
+        }
+        printf("\n");
     }
 
     return EXIT_SUCCESS;
