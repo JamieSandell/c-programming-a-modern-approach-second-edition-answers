@@ -18,7 +18,9 @@ float compute_GPA(char grades[], int n);
 
 int main(void)
 {
-    printf("")
+    char grades[LENGTH] = {'A', 'B', 'C', 'D', 'F'} ;
+    
+    printf("GPA: %.1f\n", compute_GPA(grades, LENGTH));
 
     exit(EXIT_SUCCESS);
 }
@@ -29,7 +31,7 @@ float compute_GPA(char grades[], int n)
 
     for (int i = 0; i < n; i++)
     {
-        switch(ToUpper(grades[i]))
+        switch(toupper(grades[i]))
         {
             case 'A':
             {
@@ -63,5 +65,5 @@ float compute_GPA(char grades[], int n)
         }
     }
 
-    float average = total / n;
+    return total / n;
 }
