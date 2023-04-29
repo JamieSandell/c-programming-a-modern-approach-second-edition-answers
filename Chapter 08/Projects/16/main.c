@@ -22,6 +22,7 @@ Hint: You may wish to use the functions from <ctype.h>, such as isalpha and tolo
 */
 
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -30,17 +31,51 @@ Hint: You may wish to use the functions from <ctype.h>, such as isalpha and tolo
 int main(void)
 {
     int counts_one[LENGTH] = {0};
-    int counts_two[LENGTH] = {0};
     int c;
+    bool anagram = true;
 
     printf("Enter the first word: ");
 
     while((c = getchar()) != '\n')
     {
-        if (isalpha == 0)
+        if (isalpha(c) == 0)
         {
             continue;
         }
+
+        c = tolower(c);
+        counts_one[c - 'a']++;
+    }
+
+    while((c = getchar()) != '\n')
+    {
+        if (isalpha(c) == 0)
+        {
+            continue;
+        }
+
+        c = tolower(c);
+        counts_one[c - 'a']--;
+    }
+
+    printf("Enter the second word: ");
+
+    for (int i = 0; i < LENGTH; i++)
+    {
+        if (counts_one[i] != 0)
+        {
+            anagram = false;
+            break;
+        }
+    }
+
+    if (anagram)
+    {
+        printf("The words are anagrams.\n");
+    }
+    else
+    {
+        printf("The words are not anagrams.\n");
     }
 
     exit(EXIT_SUCCESS);
