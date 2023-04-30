@@ -43,11 +43,35 @@ Hint: You may wish to use the functions from <ctype.h>, such as isalpha and tolo
 
 #define LENGTH 26
 
+void read_word(int counts[LENGTH]);
+bool equal_array(int counts1[LENGTH], int counts2[LENGTH]);
+
 int main(void)
 {
     int counts_one[LENGTH] = {0};
+    int counts_two[LENGTH] = {0};
+
+    printf("Enter the first word: ");
+    read_word(counts_one);
+
+    printf("Enter the second word: ");
+    read_word(counts_two);
+
+    if (equal_array(counts_one, counts_two))
+    {
+        printf("The words are anagrams.\n");
+    }
+    else
+    {
+        printf("The words are not anagrams.\n");
+    }
+
+    exit(EXIT_SUCCESS);
+}
+
+void read_word(int counts[LENGTH])
+{
     int c;
-    bool anagram = true;
 
     printf("Enter the first word: ");
 
@@ -59,39 +83,19 @@ int main(void)
         }
 
         c = tolower(c);
-        counts_one[c - 'a']++;
+        counts[c - 'a']++;
     }
+}
 
-    while((c = getchar()) != '\n')
-    {
-        if (isalpha(c) == 0)
-        {
-            continue;
-        }
-
-        c = tolower(c);
-        counts_one[c - 'a']--;
-    }
-
-    printf("Enter the second word: ");
-
+bool equal_array(int counts1[LENGTH], int counts2[LENGTH])
+{
     for (int i = 0; i < LENGTH; i++)
     {
-        if (counts_one[i] != 0)
+        if (counts1[i] != counts2[i])
         {
-            anagram = false;
-            break;
+            return false;
         }
     }
 
-    if (anagram)
-    {
-        printf("The words are anagrams.\n");
-    }
-    else
-    {
-        printf("The words are not anagrams.\n");
-    }
-
-    exit(EXIT_SUCCESS);
+    return true;
 }
