@@ -45,7 +45,9 @@ int main(void)
 
         c = tolower(c);
         counts_one[c - 'a']++;
-    }
+    }    
+
+    printf("Enter the second word: ");
 
     while((c = getchar()) != '\n')
     {
@@ -57,8 +59,6 @@ int main(void)
         c = tolower(c);
         counts_one[c - 'a']--;
     }
-
-    printf("Enter the second word: ");
 
     for (int i = 0; i < LENGTH; i++)
     {
