@@ -43,16 +43,12 @@ have 99 rows and 99 columns.
 #include <stdio.h>
 #include <stdlib.h>
 
-
+void create_magic_square(int n, char magic_square[n][n]);
+void print_magic_square(int n, char magic_square[n][n]);
 
 int main(void)
 {
-    int n;
-    int row;
-    int column;
-    int count;
-    int previous_row;
-    int previous_column;
+    int n;    
 
     printf("This program creates a magic square of a specified size.\n");
     printf("The size must be an odd number between 1 and 99.\n");
@@ -65,7 +61,21 @@ int main(void)
         return EXIT_FAILURE;
     }
 
-    int magic_square[n][n];
+    char magic_square[n][n];
+
+    create_magic_square(n, magic_square);
+    print_magic_square(n, magic_square);
+
+    exit(EXIT_SUCCESS);
+}
+
+void create_magic_square(int n, char magic_square[n][n])
+{
+    int row;
+    int column;
+    int count;
+    int previous_row;
+    int previous_column;
 
     for (row = 0; row < n; row++)
     {
@@ -121,15 +131,16 @@ int main(void)
             }
         }
     }
+}
 
-    for (column = 0; column < n; column++)
+void print_magic_square(int n, char magic_square[n][n])
+{
+    for (int column = 0; column < n; column++)
     {
-        for (row = 0; row < n; row++)
+        for (int row = 0; row < n; row++)
         {
             printf("%4d", magic_square[row][column]);
         }
         printf("\n");
     }
-
-    return EXIT_SUCCESS;
 }
