@@ -32,7 +32,7 @@ scanf(" %c", &ch) to read the operators and operands.
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ARRAY_LENGTH(array) (sizeof((array))/sizeof((array)[0]))
+#define ARRAY_LENGTH(array) (sizeof((array)) / sizeof((array)[0]))
 
 #define STACK_SIZE 100
 
@@ -45,8 +45,8 @@ bool is_empty(void);
 bool is_full(void);
 void stack_underflow(void);
 void stack_overflow(void);
-void push(char c);
-char pop(void);
+void push(int c);
+int pop(void);
 
 int main(void)
 {
@@ -54,12 +54,14 @@ int main(void)
     const char operands[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     const char operators[] = {'+', '-', '*', '/', '='};
     bool invalid_input;
+    int operand_1;
+    int operand_2;
 
     printf("Enter an RPN expression: ");
 
     while(true)
     {
-        c = getchar();
+        scanf(" %c", &c);
         invalid_input = true;
 
         for (int i = 0; i < ARRAY_LENGTH(operands); i++)
@@ -71,21 +73,66 @@ int main(void)
             }
         }
 
-        for (int i = 0; i < ARRAY_LENGTH(operators); i++)
+        if (invalid_input)
         {
-            if (c == operators[i])
+            for (int i = 0; i < ARRAY_LENGTH(operators); i++)
             {
-                invalid_input = false;
-                break;
+                if (c == operators[i])
+                {
+                    invalid_input = false;
+                    break;
+                }
             }
-        }
+        }        
 
         if (invalid_input)
         {
             break;
         }
 
-        
+        switch (c)
+        {
+            case '+':
+            {
+                operand_1 = pop();
+                operand_2 = pop();
+                push(operand_1 + operand_2);
+                break;
+            }
+            case '-':
+            {
+                operand_1 = pop();
+                operand_2 = pop();
+                push(operand_2 - operand_1);
+                break;
+            }
+            case '*':
+            {
+                operand_1 = pop();
+                operand_2 = pop();
+                push(operand_1 * operand_2);
+                break;
+            }
+            case '/':
+            {
+                operand_1 = pop();
+                operand_2 = pop();
+                push(operand_2 / operand_1);
+                break;
+            }
+            case '=':
+            {
+                printf("Value of expression: %d\n", pop());
+                make_empty();
+                printf("Enter an RPN expression: ");
+                break;
+            }
+            default:
+            {
+                push(c - '0');                
+                break;
+            }
+        }     
     }
 
     exit(EXIT_SUCCESS);
@@ -118,7 +165,7 @@ void stack_overflow()
     exit(EXIT_FAILURE);
 }
 
-void push (char c)
+void push (int c)
 {
     if (is_full())
     {
@@ -130,7 +177,7 @@ void push (char c)
     }
 }
 
-char pop(void)
+int pop(void)
 {
     if (is_empty())
     {
