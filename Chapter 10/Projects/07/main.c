@@ -114,5 +114,85 @@ void clear_digits_array(void)
 
 void process_digit(int digit, int position)
 {
+  int seg_row = digit;
+  
+  for (int seg_col = 0; seg_col < 7; seg_col++)
+  {
+    switch (seg_col)
+    {
+      case 0:
+      {
+        if (segments[seg_row][seg_col])
+        {
+          digits[0][1 + position] = '_';
+        }
+        break;
+      }
+      case 1:
+      {
+        if (segments[seg_row][seg_col])
+        {
+          digits[1][2 + position] = '|';
+        }
+        break;
+      }
+      case 2:
+      {
+        if (segments[seg_row][seg_col])
+        {
+          digits[3][2 + position] = '|';
+        }
+        break;
+      }
+      case 3:
+      {
+        if (segments[seg_row][seg_col])
+        {
+          digits[3][1+ position] = '-';
+        }
+        break;
+      }
+      case 4:
+      {
+        if (segments[seg_row][seg_col])
+        {
+          digits[3][0 + position] = '|';
+        }
+        break;
+      }
+      case 5:
+      {
+        if (segments[seg_row][seg_col])
+        {
+          digits[1][0 + position] = '|';
+        }
+        break;
+      }
+      case 6:
+      {
+        if (segments[seg_row][seg_col])
+        {
+          digits[2][1 + position] = '-';
+        }
+        break;
+      }
+      default:
+      {
+        printf("Error: unhandled seg_col in process_digit.\n");
+        exit(EXIT_FAILURE);
+      }
+    }
+  }
+
+  // add spaces to the last column
+  for (int i = 0; i < 4; i++)
+  {
+    digits[i][3 + position] = ' ';
+  }
+
+}
+
+void print_digits_array(void)
+{
 
 }
