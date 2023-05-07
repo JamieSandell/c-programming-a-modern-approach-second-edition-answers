@@ -10,14 +10,19 @@ second-largest respectively.
 
 void find_two_largest(int a[], int n, int *largest, int *second_largest)
 {
-    *largest = a[0];
-    *second_largest = a[0];
-
-    for (int i = 1; i < n, i++)
+    for (int i = 1, *largest = a[0]; i < n, i++)
     {
         if (*largest < a[i])
         {
-            
+            *largest = a[i];
+        }
+    }
+
+    for (int i = 1, *second_largest = a[0]; i < n; i++)
+    {
+        if (*second_largest < a[i] && a[i] < *largest)
+        {
+            *second_largest = a[i];
         }
     }
 }
