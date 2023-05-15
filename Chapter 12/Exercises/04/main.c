@@ -1,22 +1,23 @@
 /*
-What will be the contents of the a array after the following statements are executed?
+Rewrite the make_empty, is_empty and is_full functions of Section 10.2 to use the
+pointer variable top_ptr instead of the integer variable top.
 
-#define N 10
+#define STACK_SIZE 100
 
-int a[N] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-int *p = &a[0], *q = &a[N-1], temp;
+int *top_ptr = contents;
 
-while (p < q) {
-    temp = *p;
-    *p++ = *q;
-    *q-- = temp;
+void make_empty(void)
+{
+    top_ptr = contents;
 }
 
-first run-through:
-temp = 1
-*p = *q (10) and then p is incremented (p = &a[1])
-*q = temp (*q = 1) and then q is decremented (q = &a[8])
+bool is_empty(void)
+{
+    return top_ptr == contents; // the array implicitly converts to pointer to first element. This implicit conversion is called decaying.
+}
 
-so it's reversing the array to become:
-10, 9, 8, 7, 6, 5, 4, 3, 2, 1
+bool is_full(void)
+{
+    return top_ptr == &contents[STACK_SIZE - 1];
+}
 */
