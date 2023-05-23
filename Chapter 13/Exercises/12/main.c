@@ -11,6 +11,7 @@ null character) in the string pointed to by extension. Keep the function as simp
 sible by having it use the strlen and strcpy functions.
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -32,11 +33,11 @@ int main(void)
 void get_extension(const char *file_name, char *extension)
 {
     int length = strlen(file_name);
-    char *p = file_name + length;
+    const char *p = file_name + length;
 
-    while (*p-- != '.')
+    while (*p != '.')
     {
-        if (p = file_name)
+        if (p-- == file_name)
         {
             strcpy(extension, "");
             return;
