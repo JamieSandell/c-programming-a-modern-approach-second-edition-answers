@@ -1,64 +1,74 @@
 /*
-Write a program that finds the "smallest" and "largest" in a series of words. After the user
-enters the words, the program will determine which words would come first and last if the
-words were listed in dictionary order. The program must stop accepting input when the user
-enters a four-letter word. Assume that no word is more than 20 letters long. An interactive
-session with the program might look like this:
-
-Enter word: dog
-Enter word: zebra
-Enter word: rabbit
-Enter word: catfish
-Enter word: walrus
-Enter word: cat
-Enter word: fish
-
-Smallest word: cat
-Largest word: zebra
-
-Hint: Use two strings named smallest_word and largest_word to keep track of the
-"smallest" and "largest" words entered so far. Each time the user enters a word, use
-strcmp to compare it with smallest_word; if the new word is "smaller", use strcpy
-to save it in smallest_word. Do a similar comparison with largest_word. Use
-strlen to determine when the user has entered a four-letter word.
+Improve the remind.c program of Section 13.5 in the following ways:
+(a) Have the program print an error message and ignore a remainder if the corresponding
+    day is negative or larger than 31. Hint: Use a continue statement.
+(b) Allow the user to enter a day, a 24-hour time and a reminder. The printed reminder list
+    should be sorted first by day, then by time. (The original program allows the user to
+    enter a time, but it's treated as part of the reminder.)
+(c) Have the program print a one-year reminder list. Require the user to enter the days in the
+    form month/day.
 */
 
+/* Prints a one-month reminder list */
+
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#define LENGTH 20
+#define MAX_REMIND 50 /* maximum number of reminders */
+#define MSG_LEN 60 /* max length of reminder message */
+
+int read_line(char str[], int n);
 
 int main(void)
 {
-    char input[LENGTH + 1];
-    char smallest[LENGTH + 1];
-    char largest[LENGTH + 1];
+    char reminders[MAX_REMIND][MSG_LEN+3];
+    char day_str[3], msg_str[MSG_LEN+1];
+    int day, i, j, num_remind = 0;
 
-    printf("Enter word: ");
-    scanf("%s", input);
-    strcpy(smallest, input);
-    strcpy(largest, input);
-
-    while (strlen(input) != 4)
-    {
-        printf("Enter word: ");
-        scanf("%s", input);
-
-        if (strcmp(smallest, input) > 0)
-        {
-            strcpy(smallest, input);
+    for (;;) {
+        if (num_remind == MAX_REMIND) {
+            printf("-- No space left --\n");
+            break;
         }
 
-        if (strcmp(largest, input) < 0)
+        printf("Enter day and reminder: ");
+        scanf("%2d", &day);
+        if (day == 0)
+            break;
+        if (day < 0 || day > 31)
         {
-            strcpy(largest, input);
+            printf("-- day cannot be less than 0 or greater than 31 --\n");
+            continue;
         }
+        sprintf(day_str, "%2d", day);
+        read_line(msg_str, MSG_LEN);
+
+        for (i = 0; i < num_remind; i++)
+            if (strcmp(day_str, reminders[i]) < 0)
+                break;
+        for (j = num_remind; j > i; j--)
+            strcpy(reminders[j], reminders[j-1]);
+        
+        strcpy(reminders[i], day_str);
+        strcat(reminders[i], msg_str);
+
+        num_remind++;
     }
 
-    printf("\nSmallest word: %s\n", smallest);
-    printf("Largest word: %s\n", largest);
-    
+    printf("\nDay Reminder\n");
+    for (i = 0; i < num_remind; i++)
+        printf(" %s\n", reminders[i]);
 
-    exit(EXIT_SUCCESS);
+    return 0;
+}
+
+int read_line(char str[], int n)
+{
+    int ch, i = 0;
+
+    while ((ch = getchar()) != '\n')
+        if (i < n)
+            str[i++] = ch;
+    str[i] = '\0';
+    return i;
 }
