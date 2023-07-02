@@ -22,8 +22,8 @@ int read_line(char str[], int n);
 int main(void)
 {
     char reminders[MAX_REMIND][MSG_LEN+3];
-    char day_str[3], msg_str[MSG_LEN+1];
-    int day, i, j, num_remind = 0;
+    char day_str[3], msg_str[MSG_LEN+1], time_str[6];
+    int day, i, j, num_remind = 0, hours, minutes;
 
     for (;;) {
         if (num_remind == MAX_REMIND) {
@@ -31,7 +31,7 @@ int main(void)
             break;
         }
 
-        printf("Enter day and reminder: ");
+        printf("Enter day, a 24-hour time and a reminder: ");
         scanf("%2d", &day);
         if (day == 0)
             break;
@@ -41,6 +41,8 @@ int main(void)
             continue;
         }
         sprintf(day_str, "%2d", day);
+        scanf("%2d:%2d", &hours, &minutes);
+        sprintf("")
         read_line(msg_str, MSG_LEN);
 
         for (i = 0; i < num_remind; i++)
