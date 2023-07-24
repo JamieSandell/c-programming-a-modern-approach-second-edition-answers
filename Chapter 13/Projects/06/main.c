@@ -16,36 +16,36 @@ int main(int argc, char *argv[])
                      "Mars", "Jupiter", "Saturn",
                      "Uranus", "Neptune", "Pluto"};
   int i, j;
-  char *k, *l;
+  char *a, *p;
+  int argument_length;
 
   for (i = 1; i < argc; i++)
   {
     for (j = 0; j < NUM_PLANETS; j++)
     {
-        if (strlen(argv[i]) != strlen(planets[j]))
+        argument_length = strlen(argv[i]);
+
+        if (argument_length != strlen(planets[j]))
         {
             continue;
         }
 
-        k = argv[i];
-        l = planets[j];
+        a = argv[i];
+        p = planets[j];
 
-        for (k = argv[i], l = planets[j]; *k != '\n'; k++, l++)
+        for (int k = 0; k < argument_length; k++)
         {
-            if (tolower(*k) != tolower(*l))
+            if (tolower(*p) != tolower(*a))
             {
                 break;
             }
         }
 
-        if (tolower(*k) != tolower(*l))
+        if (*p == *a)
         {
+            printf("%s is planet %d\n", argv[i], j + 1);
             break;
-        }
-
-        printf("%s is planet %d\n", argv[i], j + 1);
-        break;
-        
+        }        
     }
 
     if (j == NUM_PLANETS)
