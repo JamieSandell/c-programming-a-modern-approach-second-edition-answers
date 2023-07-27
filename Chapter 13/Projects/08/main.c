@@ -1,9 +1,9 @@
 /*
 Modify Programming Project 5 from Chapter 7 so that it includes the following function:
 
-int compute_vowel_count(const char *sentence);
+int compute_scrabble_value(const char *word);
 
-The function returns the number of vowels in the string pointed to by the sentence parameter.
+The function returns the SCRABBLE value of the string pointed to by word.
 */
 
 /*
@@ -26,110 +26,88 @@ Hint: Use the toupper library function.
 
 #define LENGTH 100
 
-int compute_vowel_count(const char *sentence);
+int compute_scrabble_value(const char *word);
 
 int main(void)
 {
-    int value = 0;
     char word[LENGTH + 1];
     char *c = word;
 
     printf("Enter a word: ");
 
-    while ((*c++ = toupper(getchar())) != '\n')
+    while ((*c++ = toupper(getchar())) != '\n' && *c != EOF && c <= word + LENGTH)
     {
         ;
     }
 
     *(--c) = '\0';
-    c = word;
 
-while (*c)
-{
-    switch (*c++)
-    {
-        case 'A': // fall through
-        case 'E': // fall through
-        case 'I': // fall through
-        case 'L': // fall through
-        case 'N': // fall through
-        case 'O': // fall through
-        case 'R': // fall through
-        case 'S': // fall through
-        case 'T': // fall through
-        case 'U':
-        {
-            value += 1;
-            break;
-        }
-        case 'D': // fall through
-        case 'G':
-        {
-            value += 2;
-            break;
-        }
-        case 'B': // fall through
-        case 'C': // fall through
-        case 'M': // fall through
-        case 'P':
-        {
-            value += 3;
-            break;
-        }
-        case 'F': // fall through
-        case 'H': // fall through
-        case 'V': // fall through
-        case 'W': // fall through
-        case 'Y':
-        {
-            value += 4;
-            break;
-        }
-        case 'K':
-        {
-            value += 5;
-            break;
-        }
-        case 'J': // fall through
-        case 'X':
-        {
-            value += 8;
-            break;
-        }
-        case 'Q': // fall through
-        case 'Z':
-        {
-            value += 10;
-            break;
-        }
-        default:
-        {
-            break;
-        }
-    }
-}
-
-    printf("Scrabble value: %d\n", value);
-    printf("Vowel count of %s: %d\n", word, compute_vowel_count(word));
+    printf("SCRABBLE value of %s: %d\n", word, compute_scrabble_value(word));
 
     return EXIT_SUCCESS;
 }
 
-int compute_vowel_count(const char *sentence)
+int compute_scrabble_value(const char *word)
 {
-    int count = 0;
+    int value = 0;
+    const char *c = word;
 
-    while (*sentence)
+    while (*c)
     {
-        switch(toupper(*sentence++))
+        switch (*c++)
         {
-            case 'A': // fallthrough
-            case 'E': // fallthrough
-            case 'I': // fallthrough
-            case 'O': // fallthrough
-            case 'U': // fallthrough
+            case 'A': // fall through
+            case 'E': // fall through
+            case 'I': // fall through
+            case 'L': // fall through
+            case 'N': // fall through
+            case 'O': // fall through
+            case 'R': // fall through
+            case 'S': // fall through
+            case 'T': // fall through
+            case 'U':
             {
-                ++count;
+                value += 1;
+                break;
+            }
+            case 'D': // fall through
+            case 'G':
+            {
+                value += 2;
+                break;
+            }
+            case 'B': // fall through
+            case 'C': // fall through
+            case 'M': // fall through
+            case 'P':
+            {
+                value += 3;
+                break;
+            }
+            case 'F': // fall through
+            case 'H': // fall through
+            case 'V': // fall through
+            case 'W': // fall through
+            case 'Y':
+            {
+                value += 4;
+                break;
+            }
+            case 'K':
+            {
+                value += 5;
+                break;
+            }
+            case 'J': // fall through
+            case 'X':
+            {
+                value += 8;
+                break;
+            }
+            case 'Q': // fall through
+            case 'Z':
+            {
+                value += 10;
                 break;
             }
             default:
@@ -139,5 +117,5 @@ int compute_vowel_count(const char *sentence)
         }
     }
 
-    return count;
+    return value;
 }
