@@ -39,7 +39,16 @@ int main(void)
 
     printf("Enter a sentence: ");
 
-    while ((*p = getchar()) != '\n;')
+    while ((*p = getchar()) != '\n' && p <= ((count + 1) * MAX_WORD_LENGTH + 1) && count < MAX_WORDS)
+    {
+        if (*p == ' ')
+        {
+            ++count;
+            p = sentence + ((count + 1) * MAX_WORD_LENGTH + 1);
+        }
+
+        p++;
+    }
 
     while ((c = getchar()) != '\n' && count < LENGTH)
     {
