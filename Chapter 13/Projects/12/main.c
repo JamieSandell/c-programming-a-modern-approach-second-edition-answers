@@ -30,62 +30,18 @@ reached. Finally, print the terminating character.
 int main(void)
 {
     char sentence[MAX_WORDS][MAX_WORD_LENGTH + 1];
-    char c;
-    int count = 0;
-    int start_index;
-    int end_index;
-    char terminating_character;
-    char *p = sentence;
+    int input;
 
-    printf("Enter a sentence: ");
-
-    while ((*p = getchar()) != '\n' && p <= ((count + 1) * MAX_WORD_LENGTH + 1) && count < MAX_WORDS)
+    for (int word = 0; word < MAX_WORDS; ++word)
     {
-        if (*p == ' ')
+        for (int character = 0; character <= MAX_WORD_LENGTH; ++character)
         {
-            ++count;
-            p = sentence + ((count + 1) * MAX_WORD_LENGTH + 1);
-        }
-
-        p++;
-    }
-
-    while ((c = getchar()) != '\n' && count < LENGTH)
-    {
-        if (c == '.' || c == '?' || c == '!')
-        {
-            terminating_character = c;
-            break;
-        }
-
-        sentence[count++] = c;
-    }
-
-    printf("Reversal of sentence: ");
-
-    start_index = count;
-
-    while (start_index >= 0)
-    {
-        while (sentence[--start_index] != ' ' && start_index != 0)
-        {
-            ;
-        }
-
-        end_index = (start_index == 0 ? 0 : start_index + 1);
-
-        while (sentence[end_index] != ' ' && sentence[end_index] != '\0')
-        {
-            putchar(sentence[end_index++]);
-        }
-
-        if (start_index >= 0)
-        {
-            putchar(' ');
+            switch ((input = getchar()))
+            {
+                
+            }
         }
     }
-
-    printf("\b%c\n", terminating_character);
 
     return EXIT_SUCCESS;
 }
