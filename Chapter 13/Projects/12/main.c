@@ -20,6 +20,7 @@ then search backward for the next-to-last word. Repeat until the beginning of th
 reached. Finally, print the terminating character.
 */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,17 +32,68 @@ int main(void)
 {
     char sentence[MAX_WORDS][MAX_WORD_LENGTH + 1];
     int input;
+    char (*ptr_word)[MAX_WORD_LENGTH + 1] = sentence;
+    char *ptr_char = ptr_word[0];
+    char terminating_character;
 
-    for (int word = 0; word < MAX_WORDS; ++word)
+    /*
+    Traverse the slots for the words one word at a time.
+    Read into the word slots one character at a time.
+    If the max number of words is exceeded exit, with an error.
+    If the number of characters exceeds the character limit for a word, exit with an error.
+    Terminate each word with a \0
+    Store the terminating character ('.', '?', '!')
+    */
+
+   while (true)
+   {
+    if (ptr_word >= sentence + MAX_WORDS)
     {
-        for (int character = 0; character <= MAX_WORD_LENGTH; ++character)
-        {
-            switch ((input = getchar()))
-            {
-                
-            }
-        }
+        printf("The number of words exceeded the maximum of %d.", MAX_WORDS);
+        exit(EXIT_FAILURE);
+    }    
+
+    if (ptr_char >= ptr_word[0] + MAX_WORD_LENGTH)
+    {
+        printf("The number of characters for the word execeeds the maxmimum of %d", MAX_WORD_LENGTH);
+        exit(EXIT_FAILURE);
     }
 
-    return EXIT_SUCCESS;
+    input = getchar();
+
+    if (input == '\n' || input == EOF)
+    {
+        *ptr_char = '\0';
+        break;
+    }
+
+    if (input == '.' || input == '?' || input == '!')
+    {
+        terminating_character = input;
+        *ptr_char = '\0';
+        break;
+    }
+
+    if (input == ' ') // assumes only one space between words
+    {
+        *ptr_char = '\0';
+        ++ptr_word;
+        ptr_char = ptr_word[0];
+        continue;
+    }
+
+    *ptr_char = input;
+    ptr_char++;
+   }
+
+   while (ptr_word > sentence)
+   {
+    printf("%s ", *ptr_word);
+    --ptr_word;
+   }
+
+   //--ptr_word;
+   printf("%s%c\n", *ptr_word, terminating_character);
+   
+   return EXIT_SUCCESS;
 }
