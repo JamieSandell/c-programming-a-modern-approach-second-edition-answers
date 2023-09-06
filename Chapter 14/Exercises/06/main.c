@@ -12,5 +12,8 @@ printf("sqrt(%g) = %g\n", 3.0, sqrt(3.0));
 two arguments.
 
 (a)
-DISP(f,x) (printf("%s(%g) = %g\n", ))
+DISP(f,x) (printf("%s(%g) = %g\n", (#f), (x), (f(x))))
+
+(b)
+DISP2(f,x,y) (printf("%s(%g, %g) = %g\n", (#f), (x), (y), (f((x), (y)))))
 */
