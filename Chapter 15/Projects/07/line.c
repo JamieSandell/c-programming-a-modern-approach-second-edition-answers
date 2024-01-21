@@ -52,12 +52,21 @@ void write_line(void)
 
             for (j = 1; j <= spaces_to_insert + 1; j++)
             {
-                putchar(' ';)
-                extra_spaces -= spaces_to_insert;
-                num_words--;
+                putchar(' ');                
             }
-        }
 
-        putchar('\n');
+            extra_spaces -= spaces_to_insert;
+            num_words--;
+        }
+    }
+
+    putchar('\n');
+}
+
+void flush_line(void)
+{
+    if (line_len > 0)
+    {
+        puts(line);
     }
 }
