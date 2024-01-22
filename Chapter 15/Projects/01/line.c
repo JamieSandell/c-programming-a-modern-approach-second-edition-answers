@@ -1,12 +1,16 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include "line.h"
 
 #define MAX_LINE_LENGTH 60
+#define MORE_SPACES_LEFT true
+#define MORE_SPACES_RIGHT false
 
 char line[MAX_LINE_LENGTH + 1];
 int line_len = 0;
 int num_words = 0;
+bool space_preference = MORE_SPACES_LEFT;
 
 void clear_line(void)
 {
@@ -39,6 +43,7 @@ void write_line(void)
     int extra_spaces, spaces_to_insert, i, j;
 
     extra_spaces = MAX_LINE_LENGTH - line_len;
+    space_preference = !space_preference;
 
     for (i = 0; i < line_len; i++)
     {
@@ -49,6 +54,11 @@ void write_line(void)
         else
         {
             spaces_to_insert = extra_spaces / (num_words - 1);
+
+            if (space_preference == MORE_SPACES_LEFT && extra_spaces > 0)
+            {
+                ++spaces_to_insert;
+            }
 
             for (j = 1; j <= spaces_to_insert + 1; j++)
             {
