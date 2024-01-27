@@ -26,7 +26,6 @@ void insert(void);
 void search(void);
 void update(void);
 void print(void);
-int cmpfunc (const void *a, const void *b);
 
 /// @brief Prompts the user to enter an operation code,
 ///         then calls a function to perform the requested
@@ -196,15 +195,8 @@ void print(void)
     printf("Part Number     Part Name               "
            "Quantity on Hand\n");
 
-    qsort(inventory, num_parts, sizeof(struct part), cmpfunc);
-
     for (int i = 0; i < num_parts; ++i)
     {
         printf("%7d     %-25s%11d\n", inventory[i].number, inventory[i].name, inventory[i].on_hand);
     }
-}
-
-int cmpfunc (const void *a, const void *b)
-{
-    return ((*(struct part*)a).number - (*(struct part*)b).number);
 }
