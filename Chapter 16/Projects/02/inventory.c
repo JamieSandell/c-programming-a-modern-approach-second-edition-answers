@@ -96,13 +96,13 @@ int find_part(int number)
 {
     for (int i = 0; i <num_parts; ++i)
     {
-        if (inventory[i].number == number
+        if (inventory[i].number == number)
         {
             return i;
-        })
+        }
     }
 
-    return -1
+    return -1;
 }
 
 void insert(void)
@@ -111,6 +111,92 @@ void insert(void)
 
     if (num_parts == MAX_PARTS)
     {
-        
+        printf("Database is full; can't add more parts.\n");
+        return;
+    }
+
+    printf("Enter part number: ");
+    scanf("%d", &part_number);
+
+    if (find_part(part_number) >= 0)
+    {
+        printf("Part already exists.\n");
+        return;
+    }
+
+    inventory[num_parts].number = part_number;
+    printf("Enter part name: ");
+    read_line(inventory[num_parts].name, NAME_LEN);
+    printf("Enter quantity on hand: ");
+    scanf("%d", &inventory[num_parts].on_hand);
+    ++num_parts;
+}
+
+/// @brief  Prompts the user to enter a part number, then
+///         looks up the part in the database. If the part
+///         exists, print the name and quantity on hand;
+///         if not, prints an error message.
+/// @param  
+void search(void)
+{
+    int i, number;
+
+    printf("Enter part number: ");
+    scanf("%d", &number);
+    i = find_part(number);
+
+    if (i >= 0)
+    {
+        printf("Enter change in quantity on hand: ");
+        scanf("%d", &number);
+        inventory[i].on_hand += number;
+    }
+    else
+    {
+        printf("Part not found.\n");
+    }
+}
+
+/// @brief Prompts the user to enter a part number.
+///        Prints an error message if the part doesn't
+///        exist; otherwise prompts the user to enter
+///        change in quantity on hand and updates the
+///        database.
+/// @param  
+void update(void)
+{
+    int i;
+    int number;
+    int change;
+
+    printf("Enter part number: ");
+    scanf("%d", &number);
+    i = find_part(number);
+    if (i >= 0)
+    {
+        printf("Enter change in quantity on hand: ");
+        scanf("%d", &change);
+        inventory[i].on_hand += change;
+    }
+    else
+    {
+        printf("Part not found.\n");
+    }
+}
+
+/// @brief  Prints a listing of all parts in the database,
+///         showing the part number, part name, and
+///         quantity on hand. Parts are printed in the
+///         order in which they were entered into the
+///         database.
+/// @param  
+void print(void)
+{
+    printf("Part Number     Part Name               "
+           "Quantity on Hand\n");
+
+    for (int i = 0; i < num_parts; ++i)
+    {
+        printf("%7d     %-25s%11d\n", inventory[i].number, inventory[i].name, inventory[i].on_hand);
     }
 }
