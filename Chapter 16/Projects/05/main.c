@@ -48,7 +48,14 @@ int main(void)
 {
     struct time times[NUMBER_OF_TIMES] = 
     {
-        
+        {.departure_time = 480, .arrival_time = 616},
+        {.departure_time = 583, .arrival_time = 712},
+        {.departure_time = 679, .arrival_time = 793},
+        {.departure_time = 767, .arrival_time = 900},
+        {.departure_time = 840, .arrival_time = 968},
+        {.departure_time = 945, .arrival_time = 1075},
+        {.departure_time = 1140, .arrival_time = 1280},
+        {.departure_time = 1305, .arrival_time = 1438}
     };
 
     printf("Enter a 24-hour time: ");
@@ -57,69 +64,32 @@ int main(void)
     scanf("%d:%d", &input_hours, &input_minutes);
     int minutes_since_midnight = input_hours * 60 + input_minutes;
 
-    // Store times in 24-hour clock, and convert in memory when required
-    int departure_time_1_hours = 8;
-    int departure_time_1_minutes = 0;
-    int departure_time_1_minutes_since_midnight = departure_time_1_hours * 60 + departure_time_1_minutes;
-    int arrival_time_1_hours = 10;
-    int arrival_time_1_minutes = 16;
-    int arrival_time_1_minutes_since_midnight = arrival_time_1_hours * 60 + arrival_time_1_minutes;    
-
-    int departure_time_2_hours = 9;
-    int departure_time_2_minutes = 43;
-    int departure_time_2_minutes_since_midnight = departure_time_2_hours * 60 + departure_time_2_minutes;
-    int arrival_time_2_hours = 11;
-    int arrival_time_2_minutes = 52;
-    int arrival_time_2_minutes_since_midnight = arrival_time_2_hours * 60 + arrival_time_2_minutes;
-
-    int departure_time_3_hours = 11;
-    int departure_time_3_minutes = 19;
-    int departure_time_3_minutes_since_midnight = departure_time_3_hours * 60 + departure_time_3_minutes;
-    int arrival_time_3_hours = 13;
-    int arrival_time_3_minutes = 13;
-    int arrival_time_3_minutes_since_midnight = arrival_time_3_hours * 60 + arrival_time_3_minutes;
-
-    int departure_time_4_hours = 12;
-    int departure_time_4_minutes = 47;
-    int departure_time_4_minutes_since_midnight = departure_time_4_hours * 60 + departure_time_4_minutes;
-    int arrival_time_4_hours = 15;
-    int arrival_time_4_minutes = 0;
-    int arrival_time_4_minutes_since_midnight = arrival_time_4_hours * 60 + arrival_time_4_minutes;
-
-    int departure_time_5_hours = 14;
-    int departure_time_5_minutes = 0;
-    int departure_time_5_minutes_since_midnight = departure_time_5_hours * 60 + departure_time_5_minutes;
-    int arrival_time_5_hours = 16;
-    int arrival_time_5_minutes = 8;
-    int arrival_time_5_minutes_since_midnight = arrival_time_5_hours * 60 + arrival_time_5_minutes;
-
-    int departure_time_6_hours = 15;
-    int departure_time_6_minutes = 45;
-    int departure_time_6_minutes_since_midnight = departure_time_6_hours * 60 + departure_time_6_minutes;
-    int arrival_time_6_hours = 17;
-    int arrival_time_6_minutes = 55;
-    int arrival_time_6_minutes_since_midnight = arrival_time_6_hours * 60 + arrival_time_6_minutes;
-
-    int departure_time_7_hours = 19;
-    int departure_time_7_minutes = 00;
-    int departure_time_7_minutes_since_midnight = departure_time_7_hours * 60 + departure_time_7_minutes;
-    int arrival_time_7_hours = 21;
-    int arrival_time_7_minutes = 20;
-    int arrival_time_7_minutes_since_midnight = arrival_time_7_hours * 60 + arrival_time_7_minutes;
-
-    int departure_time_8_hours = 21;
-    int departure_time_8_minutes = 45;
-    int departure_time_8_minutes_since_midnight = departure_time_8_hours * 60 + departure_time_8_minutes;
-    int arrival_time_8_hours = 23;
-    int arrival_time_8_minutes = 58;
-    int arrival_time_8_minutes_since_midnight = arrival_time_8_hours * 60 + arrival_time_8_minutes;
-
     // calculate the closest departure date to the user's input
-    int absolute_difference = abs(minutes_since_midnight - departure_time_1_minutes_since_midnight);
-    int closest_match_in_minutes_since_midnight_departure_time = departure_time_1_minutes_since_midnight;
-    int closest_match_in_minutes_since_midnight_arrival_time = arrival_time_1_minutes_since_midnight;
+    int absolute_difference; // = abs(minutes_since_midnight - departure_time_1_minutes_since_midnight);
+    int closest_match_in_minutes_since_midnight_departure_time;// ;//= departure_time_1_minutes_since_midnight;
+    int closest_match_in_minutes_since_midnight_arrival_time; // = arrival_time_1_minutes_since_midnight;
     bool closest_match_found = false;
-    int smallest_absolute_difference = absolute_difference;
+    int smallest_absolute_difference;// = absolute_difference;
+    int i;
+    int result;
+
+    for (i = 0; i < NUMBER_OF_TIMES; ++i)
+    {
+        absolute_difference = abs(minutes_since_midnight - times[i].departure_time);
+
+        if (absolute_difference == 0)
+        {
+            result = i;
+            break;
+        }
+        else if(absolute_difference < smallest_absolute_difference)
+        {
+            result = i;
+        }
+
+        // smallest_absolute_difference = absolute_difference;
+    }
+
     if (absolute_difference  == 0)
     {
         closest_match_found = true;
