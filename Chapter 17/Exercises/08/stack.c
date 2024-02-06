@@ -10,11 +10,13 @@ push return either true (if memory was available to create a node) or false (if 
 #include <stdbool.h>
 #include <stdlib.h>
 
-struct stack
+struct node
 {
     int value;
-    struct stack *next;
-} top;
+    struct node *next;
+};
+
+struct node *top = NULL;
 
 void make_empty(void);
 int pop(void);
@@ -22,23 +24,50 @@ bool push(int n);
 
 int main(void)
 {
-    top.next = NULL;
-
     return EXIT_SUCCESS;
+}
+
+void make_empty(void)
+{
+    struct node *p;
+    struct node *temp;
+
+    for (p = top; p != NULL; p = p->next)
+    {
+        temp = p;
+        p = p->next;
+        free(temp);
+    }
+}
+
+int pop(void)
+{
+    if (top == NULL)
+    {
+        printf("Error: empty stack.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    struct Node *temp = top;
+    int temp_data = top->value;
+    top = top->next;
+    free(temp);
+
+    return temp_data;
 }
 
 bool push(int n)
 {
-    struct stack *p = malloc(sizeof(*p));
+    struct node *p = malloc(sizeof(*p));
 
     if (p == NULL)
     {
         return false;
     }
 
-    top.value = n;
-    top.next = p;
-    top = p;
+    top->next = p;
+    p->next = NULL;
+    p->value = n;
 
     return true;
 }
