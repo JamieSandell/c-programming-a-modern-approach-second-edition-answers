@@ -1,0 +1,7 @@
+True or false: If x is a structure and a is a member of that structure, then (&x)->a is the
+same as x.a.
+
+True.
+
+&x is the address of x, so we can then use the member of operator on it.
+We have to use parentheses around &x, if we didn't &x->a is equivalent to &(x->a).
