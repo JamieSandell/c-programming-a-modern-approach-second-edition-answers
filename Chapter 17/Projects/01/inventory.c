@@ -23,6 +23,7 @@ struct part
 } *inventory;
 
 int num_parts = 0; // number of parts currently stored
+int inventory_size;
 
 int find_part(int number);
 void insert(void);
@@ -41,6 +42,7 @@ int main(void)
 {
     char code;
     inventory = my_malloc(sizeof(struct part) * INV_START_SIZE);
+    inventory_size = INV_START_SIZE;
 
     for (;;)
     {
@@ -75,8 +77,8 @@ int main(void)
             }
             case 'q':
             {
-                print();
-                break;
+                free(inventory);
+                exit(EXIT_SUCCESS);
             }
             default:
             {
@@ -86,11 +88,6 @@ int main(void)
         }
 
         printf("\n");
-    }
-
-    for (int i = 0; i < num_parts; ++i)
-    {
-        free(&inventory[i]);
     }
 
     return EXIT_SUCCESS;
@@ -126,7 +123,8 @@ void insert(void)
     if (num_parts == inventory_size)
     {
         printf("Database is full; increasing size.\n");
-        my_realloc(inventory, sizeof(struct part) * num_parts * 2);
+        inventory_size *= 2;
+        inventory = my_realloc(inventory, sizeof(struct part) * inventory_size);
     }
 
     printf("Enter part number: ");
