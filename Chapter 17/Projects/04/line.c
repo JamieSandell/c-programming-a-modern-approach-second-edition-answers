@@ -61,8 +61,8 @@ void add_word(const char *word)
     first_word = line;
   }
 
-  line->word = my_malloc(word_length);
-  strcpy_s(line->word, word_length, word);
+  line->word = my_malloc(word_length + 1);
+  strcpy_s(line->word, word_length + 1, word);
   line->next = my_malloc(sizeof(*(line->next)));
   line = line->next;
   line_len += word_length;
