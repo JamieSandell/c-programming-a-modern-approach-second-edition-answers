@@ -31,7 +31,6 @@ struct node
 };
 
 struct node *line = NULL;
-struct node *first_word = NULL;
 int line_len = 0;
 int num_words = 0;
 
@@ -39,10 +38,10 @@ void clear_line(void)
 {
   struct node *temp;
 
-  while (first_word != NULL)
+  while (line)
   {
-    temp = first_word;
-    first_word = first_word->next;
+    temp = line;
+    line = line->next;
     free(temp->word);
     free(temp);
   }
@@ -53,19 +52,16 @@ void clear_line(void)
 
 void add_word(const char *word)
 {
+  struct node *new_node;
   size_t word_length = strlen(word);
+  int word_mem = word_length + 1;
 
-  if (line == NULL)
-  {
-    line = my_malloc(sizeof(*line));
-    first_word = line;
-  }
-
-  line->word = my_malloc(word_length + 1);
-  strcpy_s(line->word, word_length + 1, word);
+  new_node = my_malloc(sizeof(*new_node));
+  new_node->word = my_malloc(word_mem);
+  strcpy_s(new_node->word, word_mem, word);
   line->next = my_malloc(sizeof(*(line->next)));
   line = line->next;
-  line_len += word_length;
+  line_len += word_mem;
   num_words++;
 }
 
@@ -89,8 +85,12 @@ void write_line(void)
     if (num_words > 1)
     {
       spaces_to_insert = extra_spaces / (num_words - 1);
+
       for (j = 1; j <= spaces_to_insert + 1; j++)
+      {
         putchar(' ');
+      }        
+
       extra_spaces -= spaces_to_insert;
       num_words--;
     }   
