@@ -1,0 +1,22 @@
+State whether each of the following statements is true or false. Justify each answer.
+
+(a) Every variable with static storage duration has file scope.
+(b) Every variable declared inside a function has no linkage.
+(c) Every variable with internal linkage has static storage duration.
+(d) Every parameter has block scope.
+
+(a)
+False. If it's static within a function it has block scope but static duration.
+
+(b)
+False. If it's an extern (storage class) variable and it's declared static outside of
+the function it will have internal linkage.
+If it's an extern and it's declared outside of the file it will have external linkage.
+
+(c)
+True. Variables that are static with internal linkage will have a static storage duration.
+
+(d)
+True. Parameters have block scope for the function they belong to. This is because function
+parameters are a local copy of the variable passed in, so they get block scope with automatic
+storage.
