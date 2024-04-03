@@ -8,3 +8,15 @@ Write declarations for the following variables and functions:
 	The elements of a initially point to functions named insert, search, update and print.
 (d) 	b is an array of 10 pointers to functions with two int arguments that return structures 
 	with tag t.
+
+(a)
+char * (*p)(char *);
+
+(b)
+void (*f(struct t *p, long n))(void);
+
+(c)
+void (*a[4])(void) = {insert, search, update, print};
+
+(d)
+struct t (*b[10])(int, int);
