@@ -1,0 +1,18 @@
+(a) Write a complete description of the type of the function f, assuming that it's declared as
+follows:
+
+int (*f(float (*)(long), char *))(double);
+
+f is a function that has two arguments, a pointer to a function with a long argument that returns float.
+The second argument is a pointer to a char. It returns a pointer to a function that takes a double and
+returns an int.
+
+(b) Give an example showing how f would be called.
+
+float function1(long n);
+
+char c = 'h';
+char *cp = &c;
+float (*fp)(long) = &function1;
+
+int result = (f(function1, cp))(3.14);
