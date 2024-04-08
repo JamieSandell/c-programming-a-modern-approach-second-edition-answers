@@ -1,0 +1,9 @@
+Which property of a variable dtermines whether or not it has a default initial value?
+
+(a) Storage duration
+(b) Scope
+(c) Linkage
+(d) Type
+
+Storage duration. A static variable be initialised to 0, e.g. int to 0, float to 0.0,
+and pointers to NULL.
