@@ -23,11 +23,6 @@ struct queue_type
 
 static void terminate(const char *message);
 
-int main(void)
-{
-    return EXIT_SUCCESS;
-}
-
 Queue create(int size)
 {
     Queue q = malloc(sizeof(struct queue_type));
