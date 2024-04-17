@@ -26,8 +26,6 @@ struct queue_type
 };
 
 static int size;
-struct queue_type *first_node;
-struct queue_type *last_node;
 
 Queue create(int size)
 {
@@ -56,4 +54,55 @@ void destroy(Queue q)
         q->front = q->front->next;
         free(temp);
     }
+}
+
+void enqueue(Queue q, Item i)
+{
+    struct queue_node *new_node = malloc(sizeof(struct queue_node));
+
+    if (new_node == NULL)
+    {
+        terminate("Error in enqueue: new_node could not be created.");
+    }
+
+    new_node->item = i;
+    new_node->next = NULL;
+
+    if (q->front == NULL && q->last == NULL)
+    {
+        q->front = new_node;
+        q->front->next = NULL;
+        q->last = new_node;
+        q->last->next = NULL;
+        q->count++;        
+        return;
+    }
+
+    if (q->count == 1)
+    {
+        q->front->next = new_node;
+        q->last = new_node;
+        q->count++;
+        return;
+    }
+
+    struct queue_node *temp = q->last;
+
+    /*
+    void push(node_t * head, int val) {
+    node_t * current = head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+
+    /* now we can add a new variable */
+    current->next = (node_t *) malloc(sizeof(node_t));
+    current->next->val = val;
+    current->next->next = NULL;
+}
+    */
+
+    q->last = new_node;
+    q->last->item = i;
+    q->count++;
 }
