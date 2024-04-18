@@ -58,6 +58,12 @@ void destroy(Queue q)
 
 void enqueue(Queue q, Item i)
 {
+    if (q->count == q->size)
+    {
+        char buffer[50];
+        terminate(sprintf(buffer, "Error in enqueue: queue is full. Max size: %d", q->size));
+    }
+
     struct queue_node *new_node = malloc(sizeof(struct queue_node));
 
     if (new_node == NULL)
@@ -68,7 +74,7 @@ void enqueue(Queue q, Item i)
     new_node->item = i;
     new_node->next = NULL;
 
-    if (q->front == NULL && q->last == NULL)
+    if (is_empty(q))
     {
         q->front = new_node;
         q->front->next = NULL;
@@ -86,23 +92,38 @@ void enqueue(Queue q, Item i)
         return;
     }
 
-    struct queue_node *temp = q->last;
+    struct queue_node *current = q->front;
 
-    /*
-    void push(node_t * head, int val) {
-    node_t * current = head;
-    while (current->next != NULL) {
+    while (current->next != NULL)
+    {
         current = current->next;
     }
 
-    /* now we can add a new variable */
-    current->next = (node_t *) malloc(sizeof(node_t));
-    current->next->val = val;
-    current->next->next = NULL;
-}
-    */
-
+    current->next = new_node;
     q->last = new_node;
-    q->last->item = i;
     q->count++;
+}
+
+Item dequeue(Queue q)
+{
+    Item i = q->front->item;
+    struct queue_node *temp = q->front;
+    q->front = q->front->next;
+    free(temp);
+    return i;
+}
+
+Item get_first(Queue q)
+{
+    return q->front->item;
+}
+
+Item get_last(Queue q)
+{
+    return q->last->item;
+}
+
+bool is_empty(Queue q)
+{
+    return q->front == NULL;
 }
