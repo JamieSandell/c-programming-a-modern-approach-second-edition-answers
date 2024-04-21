@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "../queue.h"
 
@@ -16,8 +17,8 @@ int main(void)
     printf("Dequeued %d from q1.\n", n);
     enqueue(q2, n);
     printf("Enqueued %d to q2.\n", n);
-    n = dequeue(q1);
-    printf("Deqeued %d from q1.\n", n);
+    n = dequeue(q2);
+    printf("Deqeued %d from q2.\n", n);
     enqueue(q2, n);
     printf("Enqueued %d to q2.\n", n);
 

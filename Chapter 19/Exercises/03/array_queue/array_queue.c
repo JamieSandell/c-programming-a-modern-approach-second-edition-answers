@@ -10,7 +10,7 @@ around" to the beginning of the array.
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
+#include "../queue.h"
 
 struct queue_type
 {
@@ -68,14 +68,18 @@ void enqueue(Queue q, Item i)
 
 Item dequeue(Queue q)
 {
-    Item i = q->contents[q->next_item_to_be_removed--];
-    q->count--;
-
-    if (q->count < 0)
+    if (q->count == 0)
     {
-        q->first_empty_slot = 0;
+        terminate("Error in dequeue: underflow.\n");
+    }
+
+    if (q->next_item_to_be_removed == q->size)
+    {
         q->next_item_to_be_removed = 0;
     }
+
+    Item i = q->contents[q->next_item_to_be_removed++];
+    q->count--;
 
     return i;
 }
