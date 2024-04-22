@@ -7,7 +7,7 @@ removed from the queue, delete the first node in the list.
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "queue.h"
+#include "../queue.h"
 
 static void terminate(const char *message);
 
@@ -25,7 +25,6 @@ struct queue_type
     int size; // max number of items
 };
 
-static int size;
 
 Queue create(int size)
 {
@@ -61,7 +60,8 @@ void enqueue(Queue q, Item i)
     if (q->count == q->size)
     {
         char buffer[50];
-        terminate(sprintf(buffer, "Error in enqueue: queue is full. Max size: %d", q->size));
+        sprintf(buffer, "Error in enqueue: queue is full. Max size: %d", q->size);
+        terminate(buffer);
     }
 
     struct queue_node *new_node = malloc(sizeof(struct queue_node));
@@ -126,4 +126,10 @@ Item get_last(Queue q)
 bool is_empty(Queue q)
 {
     return q->front == NULL;
+}
+
+static void terminate(const char *message)
+{
+    printf("%s\n", message);
+    exit(EXIT_FAILURE);
 }
