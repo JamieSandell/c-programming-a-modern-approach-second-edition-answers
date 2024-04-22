@@ -5,7 +5,7 @@ taining a fixed-length array.
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack.h"
+#include "..\stack.h"
 
 static void terminate(const char *message);
 
@@ -14,6 +14,7 @@ struct stack_type
     Item *contents;
     int size;
     int count;
+    int top;
 };
 
 Stack create(int size)
@@ -34,6 +35,7 @@ Stack create(int size)
 
     new_stack->size = size;
     new_stack->count = 0;
+    new_stack->top = -1;
 
     return new_stack;
 }
@@ -52,6 +54,28 @@ void push(Stack stack, Item item)
     }
 
     stack->contents[stack->count++] = item;
+    stack->top++;
+}
+
+Item pop(Stack stack)
+{
+    if (stack->top < 0)
+    {
+        terminate("Error in pop: underflow.\n");
+    }
+
+    if (stack->top >= stack->size)
+    {
+        terminate("Error in pop: overflow.\n");
+    }
+
+    stack->count--;
+    return stack->contents[stack->top++];
+}
+
+bool is_empty(Stack stack)
+{
+    return (stack->count > 0);
 }
 
 static void terminate(const char *message)
