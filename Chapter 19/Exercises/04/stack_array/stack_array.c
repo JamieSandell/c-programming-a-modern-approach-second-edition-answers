@@ -5,7 +5,7 @@ taining a fixed-length array.
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "..\stack.h"
+#include "../stack.h"
 
 static void terminate(const char *message);
 
@@ -70,12 +70,12 @@ Item pop(Stack stack)
     }
 
     stack->count--;
-    return stack->contents[stack->top++];
+    return stack->contents[stack->top--];
 }
 
 bool is_empty(Stack stack)
 {
-    return (stack->count > 0);
+    return stack->count == 0;
 }
 
 static void terminate(const char *message)

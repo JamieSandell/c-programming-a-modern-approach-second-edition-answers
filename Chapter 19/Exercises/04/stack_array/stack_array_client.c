@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "..\stack.h"
+#include "../stack.h"
 
 #define STACK_SIZE 5
 
