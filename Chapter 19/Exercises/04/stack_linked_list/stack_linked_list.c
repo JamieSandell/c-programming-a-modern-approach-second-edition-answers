@@ -17,7 +17,6 @@ struct stack_type
 {
     int size;
     struct node *top;
-    struct node *head;
 };
 
 static void terminate(const char *message);
@@ -33,14 +32,13 @@ Stack create(int size)
 
     new_stack->size = size;
     new_stack->top = NULL;
-    new_stack->head = NULL;
 
     return new_stack;
 }
 
 void destroy(Stack stack)
 {
-    struct node *current = stack->head;
+    struct node *current = stack->top;
     struct node *temp;
 
     while (current != NULL)
@@ -63,28 +61,37 @@ void push(Stack stack, Item item)
     }
 
     new_node->data = item;
-    new_node->next = NULL;
+    
 
-    if (stack->head == NULL)
+    if (stack->top == NULL)
     {
-        stack->head = new_node;
+        new_node->next = NULL;
+        stack->top = new_node;
     }
-
-    stack->top = new_node;
+    else
+    {
+        new_node->next = stack->top;
+        stack->top = new_node;
+    }
 }
 
 Item pop(Stack stack)
 {
+    if (is_empty(stack))
+    {
+        terminate("Error in pop: stack is empty\n");
+    }
+
     Item item = stack->top->data;
-
-    struct node *temp = stack->head;
-
-    while ()
+    struct node *current = stack->top;
+    stack->top = stack->top->next;
+    free(current);
+    return item;
 }
 
 bool is_empty(Stack stack)
 {
-    return stack->head == NULL;
+    return stack->top == NULL;
 }
 
 static void terminate(const char *message)
