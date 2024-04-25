@@ -1,0 +1,7 @@
+Describe a simple way to "toggle" a bit (change it from 0 to 1 or from 1 to 0). Illustrate the
+technique by writing a statement that toggles bit 4 of the variable i.
+
+Use the exclusive-or operator alongside a mask of the bit you want to toggle.
+E.g., oggle the 4th bit on the right of i:
+
+i ^= 1 << 4;
