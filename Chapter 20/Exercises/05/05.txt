@@ -1,0 +1,6 @@
+Write macros named GET_RED, GET_GREEN and GET_BLUE that, when given a color
+as an argument (see Exercise 4), return its 8-bit red, green and blue intensities.
+
+#define GET_RED(color) ((color) & 0xFF) // F in hex is equivalent to 1111 in binary, so FF is 1111 1111, so 8 bits all set to "on"
+#define GET_GREEN(color) (((color) >> 8) & 0xFF)
+#define GET_BLUE(color) (((color) >> 16) & 0xFF)
