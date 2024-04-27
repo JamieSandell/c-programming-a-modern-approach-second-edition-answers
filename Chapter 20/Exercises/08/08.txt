@@ -1,0 +1,18 @@
+Let f be the following function:
+
+unsigned int f(unsigned int i, int m, int n)
+{
+    return (i >> (m + 1 - n)) & ~(~0 << n);
+}
+
+(a) What is the value of ~(~0 << n)?
+(b) What does this function do?
+
+(a) This turns all the bits for the number 0 from being 0 to 1,
+shifts the bits left by n and then flips (complements) the (bits) result.
+
+(b) This function takes a number (i) and from bit position (m + 1 - n)
+upto bit position (m + 1 - n) + n. So, if you called it like this:
+f(3782134647, 8, 12);
+
+this would return the bits from bit 8 upto (inclusive) bit 12.
