@@ -25,16 +25,22 @@ int main(void)
 
 unsigned int reverse_bits(unsigned int n)
 {
-  unsigned int reverse_num = 0; /* initialize the result*/
-  unsigned int count = sizeof(unsigned int) * 8; /* counter to track the number of bits in the integer*/
+  unsigned int reversed = 0;
+  unsigned int bit_mask = 0x01;
+  unsigned int get_bit;
+  unsigned int shift_left_modifier = 0;
 
-  while (num != 0) {
-      unsigned int last_bit = num & 1; /* get the right-most bit*/
-      reverse_num <<= 1; /* add one place for the next bit */
-      reverse_num |= last_bit; /* add that bit to the right-most bit of the desired reversed bits*/
-      num >>= 1; /* remove one bit from the original */
-      count--;
-    }
-  reverse_num <<= count; /* If the original bits have only 0 s then shift the remaining bits left*/
-  return reverse_num;
+  /*
+  grab the bit at the right most end (inc along each time, so if the first time it's bit 8 next time will be bit 7)
+  shift it into position and create a bit mask with it
+  OR that with reversed
+  */
+  for (int i = 0; i < UINT_BIT; ++i)
+  {
+    get_bit = (n >> (UINT_BIT - i - 1)) & bit_mask; // shift the bit all the way to the right and then see if it's a 1 or 0 by anding it with our bit mask of 0x01.
+    reversed |= (get_bit << shift_left_modifier); // shift the bit into position and then OR it with reversed to place it in.
+    ++shift_left_modifier;
+  }
+
+  return reversed;
 }
