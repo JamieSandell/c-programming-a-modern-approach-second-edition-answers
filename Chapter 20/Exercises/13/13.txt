@@ -1,0 +1,23 @@
+If n is an unsigned int variable, what effect does the following statement have on the
+bits in n?
+
+n &= n - 1;
+
+Hint: Consider the efect on n if this statement is executed more than once.
+
+n = (n & (n - 1))
+
+Example: n = 5
+
+00000101 (5) &
+00000100 (4) =
+00000100 (4)
+
+next run through
+n = 4
+
+00000100 (4)
+00000011 (3)
+00000000 (0)
+
+the least significant bit is removed each time.
