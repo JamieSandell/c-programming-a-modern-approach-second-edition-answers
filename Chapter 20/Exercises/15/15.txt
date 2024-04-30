@@ -1,0 +1,26 @@
+a) Assume that the variable s has been declared as follows:
+
+struct {
+    int flag: 1;
+} s;
+
+With some compilers, executing the following statements causes 1 to be displayed, but with
+other compilers, the output is -1. Explain the reason for this behavior.
+
+s.flag = 1;
+printf("%d\n", s.flag);
+
+(b) How can this problem be avoided?
+
+
+(a) Bit-fields are very poorly standardized and they are generally not guaranteed to behave predictably. The standard just vaguely states (6.7.2.1/10):
+
+A bit-field is interpreted as having a signed or unsigned integer type consisting of the specified number of bits.125)
+
+Where the informative note 125) says:
+
+125) As specified in 6.7.2 above, if the actual type specifier used is int or a typedef-name defined as int, then it is implementation-defined whether the bit-field is signed or unsigned.
+
+So we can't know if int b:1 gives a signed type or unsigned type, it's up to the compiler. Your compiler apparently decided that it would be a great idea to have signed bits. So it treats your 1 bit as binary translated into a two's complement 1 bit number, where binary 1 is decimal -1 and zero is zero.
+
+(b) To fix it, use unsigned int : 1.
