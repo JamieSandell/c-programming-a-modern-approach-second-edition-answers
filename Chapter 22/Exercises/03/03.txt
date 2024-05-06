@@ -16,8 +16,7 @@ if (fp = fopen(filename, "r")) {
     //read characters until end-of-file
 }
 else {
-	
+	fprintf(stderr, "Error opening %s for reading.\n", filename);
 	exit(EXIT_FAILURE);
 }
 fclose(fp);
-
