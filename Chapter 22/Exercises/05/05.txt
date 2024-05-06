@@ -1,0 +1,9 @@
+Is there any difference between the printf conversion specifications %.4d and %04d? If
+so, explain what it is.
+
+No, they're equivalent.
+%.4d
+
+d is the specifier (integer) and .4 is the precision, which will result in an integer
+with 4 significant characters printed.
+%04d says pad with leading 0s, and 4 is the field width and d the specifier (integer.)
