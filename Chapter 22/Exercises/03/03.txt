@@ -1,0 +1,23 @@
+Find the error in the following program fragment and show how to fix it.
+
+FILE *fp;
+
+if (fp = fopen(filename, "r")) {
+    //read characters until end-of-file
+}
+fclose(fp);
+
+The error is that fclose is executed even if the file failed to be opened for reading.
+To fix it exit if error:
+
+FILE *fp;
+
+if (fp = fopen(filename, "r")) {
+    //read characters until end-of-file
+}
+else {
+	
+	exit(EXIT_FAILURE);
+}
+fclose(fp);
+
