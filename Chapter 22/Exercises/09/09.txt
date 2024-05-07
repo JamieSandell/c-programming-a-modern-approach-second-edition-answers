@@ -1,0 +1,10 @@
+Which one of the following calls is not a valid way of reading one character from the stan-
+dard input stream?
+
+(a) getch()
+(b) getchar()
+(c) getc(stdin)
+(d) fgetc(stdin)
+
+(a) getch isn't part of the C standard (normally found in curses.h / conio.h).
+It also differs from the others in that it reads directly from the keyboard, not a buffer/stream.
