@@ -4,6 +4,7 @@ shouldn't be changed). The program should obtain the file name from the command 
 write its output to stdout.
 */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -28,8 +29,6 @@ int main(int argc, char *argv[])
     terminate(message);
   }
 
-  fclose(fp);
-
   if (feof(fp))
   {
     snprintf(message, MESSAGE_SIZE, "Error in main: failed to close %s properly, EOF.\n", argv[1]);
@@ -38,10 +37,51 @@ int main(int argc, char *argv[])
 
   if (fseek(fp, 0L, SEEK_END) != 0)
   {
-    
+    snprintf(message, MESSAGE_SIZE, "Error in main: failed to seek to the end of %s\n", argv[1]);
+    terminate(message);
   }
 
   long file_size = ftell(fp);
+
+  if (file_size < 0L)
+  {
+    snprintf(message, MESSAGE_SIZE, "Error in main: failed to get the filesize of %s\n", argv[1]);
+    terminate(message);
+  }
+
+  char *file_contents;
+
+  if ((file_contents = malloc(sizeof(char) * file_size)) == NULL)
+  {
+    printf(message, MESSAGE_SIZE, "Error in main: failed to allocate memory.\n");
+    terminate(message);
+  }
+
+  if (fseek(fp, 0L, SEEK_SET) != 0)
+  {
+    snprintf(message, MESSAGE_SIZE, "Error in main: failed to seek to the start of the of %s\n", argv[1]);
+    terminate(message);
+  }
+
+  size_t new_size = fread(file_contents, sizeof(char), file_size, fp);
+
+  if (ferror(fp) != 0)
+  {
+    snprintf(message, MESSAGE_SIZE, "Error in main: failed to read %s into the buffer.\n", argv[1]);
+    terminate(message);
+  }
+
+  fclose(fp);
+
+  for (size_t i = 0; i < new_size; ++i)
+  {
+    fprintf(stdout, "%c", toupper(file_contents[i]));
+  }
+
+  if (file_contents)
+  {
+    free(file_contents);
+  }
 
   return EXIT_SUCCESS;
 }
