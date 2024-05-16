@@ -18,8 +18,7 @@ FILE *open_file_for_reading(const char *file)
 
 void close_file(FILE *fp)
 {
-    printf("Failed to close the file properly.\n");
-    terminate(fclose(fp) != 0, g_message_buffer);
+    terminate(fclose(fp) != 0, "Failed to close the file properly.\n");
 }
 
 /// @brief If the condition is true, print the message to stderr and exit.

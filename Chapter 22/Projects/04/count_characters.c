@@ -15,6 +15,7 @@ Have each program obtain the file name from the command line.
 
 int main(int argc, char *argv[])
 {
+
   terminate(argc != 2, "Program usage: count_characters file.txt");
 
   FILE *fp = open_file_for_reading(argv[1]);
