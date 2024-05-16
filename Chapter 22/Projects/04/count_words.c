@@ -16,6 +16,8 @@ Have each program obtain the file name from the command line.
 
 int main(int argc, char *argv[])
 {
+    terminate(argc != 2, "Incorrect usage. Example usage: count_words file1.txt\n");
+
     FILE *fp = open_file_for_reading(argv[1]);
 
     snprintf(g_message_buffer, MAX_MESSAGE_SIZE, "Failed to open %s for reading.\n", argv[1]);
@@ -74,7 +76,8 @@ int main(int argc, char *argv[])
 
     printf("%d word%s in %s.", word_count, word_count == 1 ? "" : "s", argv[1]);
 
-    fclose(fp)
+    snprintf(g_message_buffer, MAX_MESSAGE_SIZE, "Error whilst closing %s\n", argv[1]);
+    terminate(fclose(fp) != 0, g_message_buffer);
     
     return EXIT_SUCCESS;
 }
