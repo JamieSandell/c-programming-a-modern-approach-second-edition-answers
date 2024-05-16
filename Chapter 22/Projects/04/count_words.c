@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
         WORD_END
     };
     enum Word state = WORD_END;
+    unsigned int word_count = 0;
 
     do
     {
@@ -35,11 +36,45 @@ int main(int argc, char *argv[])
         {
             case WORD_END:
             {
+                if (isspace(c) == 0)
+                {
+                    state = WORD_START;
+                }
+
                 break;
+            }
+            case WORD_START:
+            {
+                if (isspace(c) != 0)
+                {
+                    state = WORD_END;
+                    ++word_count;
+                }
+
+                break;
+            }
+            default:
+            {
+                terminate(true, "Invalid word state.\n");
             }
         }
 
     } while (c != EOF);
+
+    if (ferror(fp))
+    {
+        snprintf(g_message_buffer, MAX_MESSAGE_SIZE, "Error whilst reading %s\n", argv[1]);
+        terminate(fp == NULL, g_message_buffer);
+    }
+
+    if (feof(fp))
+    {
+        ++word_count;
+    }
+
+    printf("%d word%s in %s.", word_count, word_count == 1 ? "" : "s", argv[1]);
+
+    fclose(fp)
     
     return EXIT_SUCCESS;
 }
