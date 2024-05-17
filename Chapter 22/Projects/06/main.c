@@ -52,15 +52,16 @@ int main(int argc, char *argv[])
    unsigned int offset = 0;
    size_t result;
 
-   printf("Offset\t\tBytes\t\t\tCharacters\n");
+   printf("Offset\t\tBytes\t\tCharacters\n");
    printf("------  -----------------------------  ----------\n");
 
    do
    {
       result = fread(buffer, 1, BUFFER_SIZE, fp);
-      printf("%6u", offset++);
+      printf("%6u\t", offset);
+      offset += 10;
 
-      for (size_t i; i < result; ++i)
+      for (size_t i = 0; i < result; ++i)
       {
          printf("%s%02X", i == 0 ? "" : " ", buffer[i]);
       }
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
       {
          printf("\t");
 
-         for (size_t i; i < result; ++i)
+         for (size_t i = 0; i < result; ++i)
          {
             printf("%c", isprint(buffer[i]) == 0 ? '.' : buffer[i]);
          }
@@ -79,7 +80,10 @@ int main(int argc, char *argv[])
    } while (!feof(fp));
 
    snprintf(message, MAX_MESSAGE_SIZE, "Error whilst reading %s\n", argv[1]);
-   terminate(ferror(fp), message);   
+   terminate(ferror(fp), message);
+
+   snprintf(message, MAX_MESSAGE_SIZE, "Failed to close %s properly.\n", argv[1]);
+   terminate(fclose(fp), message);
 
    return EXIT_SUCCESS;
 }
