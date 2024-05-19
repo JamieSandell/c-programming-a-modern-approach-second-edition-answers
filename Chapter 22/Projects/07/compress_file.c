@@ -51,6 +51,9 @@ message if its command-line argument doesn't end with the .rle extension.
 #include "common.h"
 
 #define MAX_FILE_SIZE 255
+#define MAX_SEQUENCE_COUNT 255
+
+static void write_sequence(unsigned int sequence_count, int c, FILE *const fpw, const char *filename);
 
 int main(int argc, char *argv[])
 {
@@ -62,6 +65,7 @@ int main(int argc, char *argv[])
     terminate(fpr == NULL, g_message);
 
     unsigned int sequence_count;
+    unsigned int remainder;
     int c;
     int temp;
     char destination_filename[MAX_FILE_SIZE];
@@ -76,17 +80,24 @@ int main(int argc, char *argv[])
     {
         c = fgetc(fpr);
         temp = c;
-        sequence_count = 0;
+        sequence_count = 1;
 
         do
         {
-            ++sequence_count;
+            if (sequence_count == MAX_SEQUENCE_COUNT) // the sequence in rle is represented by a byte (unsigned char), which is 0 - 255, so process it in chunks (sequence) of up to 255.
+            {
+                write_sequence(sequence_count, temp, fpw, argv[1]);
+                sequence_count = 0;
+                continue;
+            }
 
+            ++sequence_count;
         } while (c == temp && !feof(fpr));
 
         snprintf(g_message, MAX_MESSAGE_SIZE, "Error whilst reading %s\n", argv[1]);
         terminate(ferror(fpr), g_message);
         ungetc(c, fpr);
+        
         
     } while (!feof(fpr));
 
@@ -94,4 +105,12 @@ int main(int argc, char *argv[])
     terminate(ferror(fpr), g_message);    
 
     return EXIT_SUCCESS;
+}
+
+static void write_sequence(unsigned int sequence_count, int c, FILE *const fpw, const char *filename)
+{
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to write the sequence count %u to %s\n", sequence_count, filename);
+    terminate(fputc(sequence_count, fpw) == EOF, g_message);
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to write the character %c to %s\n", c, filename);
+    terminate(fputc(c, fpw) == EOF, g_message);
 }
