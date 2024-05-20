@@ -64,42 +64,30 @@ int main(int argc, char *argv[])
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error opening %s for reading.\n", argv[1]);
     terminate(fpr == NULL, g_message);
 
-    unsigned int sequence_count;
-    unsigned int remainder;
+    unsigned int sequence_count = 1;
     int c;
     int temp;
     char destination_filename[MAX_FILE_SIZE];
     char file_extension[] = ".rle";
 
-    strncpy(destination_filename, argv[1], sizeof(argv[1]));
-    strncat(destination_filename, file_extension, sizeof(file_extension));
+    strncpy(destination_filename, argv[1], MAX_FILE_SIZE - 1);
+    strncat(destination_filename, file_extension, MAX_FILE_SIZE - 1);
 
     FILE *fpw = fopen(destination_filename, "wb");
 
-    do
+    while ((c = fgetc(fpr)) != EOF)
     {
-        c = fgetc(fpr);
-        temp = c;
-        sequence_count = 1;
-
-        do
+        temp = fgetc(fpr);
+        if (c != temp)
         {
-            if (sequence_count == MAX_SEQUENCE_COUNT) // the sequence in rle is represented by a byte (unsigned char), which is 0 - 255, so process it in chunks (sequence) of up to 255.
-            {
-                write_sequence(sequence_count, temp, fpw, argv[1]);
-                sequence_count = 0;
-                continue;
-            }
-
+            write_sequence(sequence_count, c, fpw, argv[1]);
+        }
+        else
+        {
             ++sequence_count;
-        } while (c == temp && !feof(fpr));
-
-        snprintf(g_message, MAX_MESSAGE_SIZE, "Error whilst reading %s\n", argv[1]);
-        terminate(ferror(fpr), g_message);
-        ungetc(c, fpr);
-        
-        
-    } while (!feof(fpr));
+        }
+    }
+    
 
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error whilst reading %s\n", argv[1]);
     terminate(ferror(fpr), g_message);    
