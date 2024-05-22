@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
     while ((c = fgetc(fpr)) != EOF)
     {
         temp = fgetc(fpr);
+
         if (c != temp)
         {
             write_sequence(sequence_count, c, fpw, argv[1]);
@@ -86,11 +87,18 @@ int main(int argc, char *argv[])
         {
             ++sequence_count;
         }
+
+        ungetc(temp, fpr)
     }
-    
+
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Error closing %s", destination_filename);
+    terminate(fclose(fpw), g_message);
 
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error whilst reading %s\n", argv[1]);
-    terminate(ferror(fpr), g_message);    
+    terminate(ferror(fpr), g_message);
+
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Error closing %s\n", argv[1]);
+    terminate(fclose(fpr), g_message);
 
     return EXIT_SUCCESS;
 }
