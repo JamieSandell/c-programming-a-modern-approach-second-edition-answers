@@ -65,8 +65,9 @@ int main(int argc, char *argv[])
     terminate(fpr == NULL, g_message);
 
     unsigned int sequence_count = 1;
-    int c;
-    int temp;
+    int current;
+    int next;
+    int previous;
     char destination_filename[MAX_FILE_SIZE];
     char file_extension[] = ".rle";
 
@@ -75,20 +76,32 @@ int main(int argc, char *argv[])
 
     FILE *fpw = fopen(destination_filename, "wb");
 
-    while ((c = fgetc(fpr)) != EOF)
+    while ((current = fgetc(fpr)) != EOF)
     {
-        temp = fgetc(fpr);
+        next = fgetc(fpr);
 
-        if (c != temp)
+        if (current != next)
         {
-            write_sequence(sequence_count, c, fpw, argv[1]);
+            write_sequence(sequence_count, current, fpw, argv[1]);
+            sequence_count = 1;
+        }
+        else if (sequence_count > 1)
+        {
+            write_sequence(sequence_count, previous, fpw, argv[1]);
+            sequence_count = 1;
         }
         else
         {
             ++sequence_count;
+            continue;
         }
 
-        ungetc(temp, fpr)
+        if (next != EOF)
+        {
+            terminate(ungetc(next, fpr) == EOF, "Failed to push back character to the stream.\n");
+        }
+
+        previous = current;
     }
 
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error closing %s", destination_filename);
