@@ -67,7 +67,6 @@ int main(int argc, char *argv[])
     unsigned int sequence_count = 1;
     int current;
     int next;
-    int previous;
     char destination_filename[MAX_FILE_SIZE];
     char file_extension[] = ".rle";
 
@@ -83,27 +82,23 @@ int main(int argc, char *argv[])
         if (current != next)
         {
             write_sequence(sequence_count, current, fpw, argv[1]);
+            if (next != EOF)
+            {
+                terminate(ungetc(next, fpr) == EOF, "Failed to push back character to the stream.\n");
+            }
+            
             sequence_count = 1;
-        }
-        else if (sequence_count > 1)
-        {
-            write_sequence(sequence_count, previous, fpw, argv[1]);
-            sequence_count = 1;
-        }
-        else
-        {
-            ++sequence_count;
             continue;
         }
+
+        ++sequence_count;
 
         if (next != EOF)
         {
             terminate(ungetc(next, fpr) == EOF, "Failed to push back character to the stream.\n");
         }
-
-        previous = current;
     }
-
+    
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error closing %s", destination_filename);
     terminate(fclose(fpw), g_message);
 

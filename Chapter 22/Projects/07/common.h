@@ -4,7 +4,7 @@
 
 #include <stdbool.h>
 
-#define MAX_MESSAGE_SIZE 255
+#define MAX_MESSAGE_SIZE 512
 
 extern char g_message[];
 
