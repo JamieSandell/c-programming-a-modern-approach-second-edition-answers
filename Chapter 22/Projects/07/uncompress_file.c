@@ -56,15 +56,12 @@ message if its command-line argument doesn't end with the .rle extension.
 int main(int argc, char *argv[])
 {
     terminate(argc != 2, "Error: Incorrect usage, example usage: uncompress_file foo.txt.rle\n");
+
+    char *p = strrchr(argv[1], '.');
+
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error: File must have the extension .rle\n");
-
-    int len = strlen(argv[1]);
-
-    terminate( len < 5, g_message);
-
-    char *file_extension = (&(argv[1]) - len - 4);
-
-    terminate(strcmp(tolower(file_extension), ".rle"), g_message);
+    terminate(p == NULL, g_message);
+    terminate(strcmp(p, ".rle"), g_message);
 
     FILE *fpr = fopen(argv[1], "rb");
 
@@ -73,9 +70,32 @@ int main(int argc, char *argv[])
 
     char destination_file[MAX_FILE_LENGTH];
 
-    strncpy(destination_file, argv[1], len - 4);
+    strncpy(destination_file, argv[1], strlen(argv[1]) - 4);
 
+    int sequence;
+    int byte;
+    FILE *fpw = fopen(destination_file, "wb");
+
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to open %s for writing.\n", destination_file);
+    terminate(fpw == NULL, g_message);
+
+    while ((sequence = fgetc(fpr)) != EOF)
+    {
+        byte = fgetc(fpr);
+        snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to read byte in %s\n", argv[1]);
+        terminate(ferror(fpr), g_message);
+
+        for (int i = 0; i < sequence; ++i)
+        {
+            snprintf(g_message, MAX_MESSAGE_SIZE, "Error whilst writing to %s\n", destination_file);
+            terminate(fputc(byte, fpw) == EOF, g_message);
+        }
+    }
     
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Error whilst closing %s\n", destination_file);
+    terminate(fclose(fpw) == EOF, g_message);
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Error whilst closing %s\n", argv[1]);
+    terminate(fclose(fpr) == EOF, g_message);  
 
     return EXIT_SUCCESS;
 }
