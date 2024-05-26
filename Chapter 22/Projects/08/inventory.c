@@ -47,7 +47,7 @@ int num_parts = 0;   /* number of parts currently stored */
 int find_part(int number);
 void dump(void);
 void insert(void);
-void restor(void);
+void restore(void);
 void search(void);
 void update(void);
 void print(void);
@@ -69,7 +69,11 @@ int main(void)
     while (getchar() != '\n')   /* skips to end of line */
       ;
     switch (code) {
+      case 'd': dump();
+                break;
       case 'i': insert();
+                break;
+      case 'r': restore();
                 break;
       case 's': search();
                 break;
@@ -107,6 +111,12 @@ void dump(void)
   char filename[MAX_FILENAME_LEN];
   printf("Enter name of output file: ");
   int result = read_line(filename, MAX_FILENAME_LEN);
+
+  if (result == 0)
+  {
+    fprintf(stderr, "Error: no filename entered to dump to.\n");
+  }
+
   FILE *fpw = fopen(filename, "wb");
   
   if (fpw == NULL)
@@ -115,7 +125,7 @@ void dump(void)
     return;
   }
 
-  if (fread(inventory, sizeof(struct part), MAX_PARTS, fpw) != MAX_PARTS)
+  if (fwrite(inventory, sizeof(struct part), num_parts, fpw) != (size_t)num_parts)
   {
     if (ferror(fpw))
     {
@@ -169,7 +179,38 @@ void restore(void)
   char filename[MAX_FILENAME_LEN];
   printf("Enter name of input file: ");
   int result = read_line(filename, MAX_FILENAME_LEN);
-  
+
+  if (result == 0)
+  {
+    fprintf(stderr, "Error: no filename entered.\n");
+    return;
+  }
+
+  FILE *fpr = fopen(filename, "rb");
+
+  if (fpr == NULL)
+  {
+    printf("Error opening %s for reading.\n", filename);
+    return;
+  }
+
+  size_t number_of_parts_read = fread(inventory, sizeof(struct part), MAX_PARTS, fpr);
+
+  if (number_of_parts_read != MAX_PARTS)
+  {
+    if (ferror(fpr))
+    {
+      fprintf(stderr, "Error whilst reading from %s\n", filename);
+      return;
+    }
+  }
+
+  if (fclose(fpr) == EOF)
+  {
+    fprintf(stderr, "Error closing %s after reading.\n", filename);
+  }
+
+  num_parts = number_of_parts_read;
 }
 
 /**********************************************************
