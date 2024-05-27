@@ -18,7 +18,6 @@ command line.
 #define MAX_PART_NAME_LENGTH 25
 
 char g_message[MAX_MESSAGE_SIZE];
-unsigned int g_num_parts_read = 0;
 
 struct part {
   int number;
@@ -27,17 +26,28 @@ struct part {
 };
 
 int part_comparator(const void *v1, const void *v2);
-void read_parts_file(struct part *buffer, const char *filename);
+size_t read_parts_file(struct part *buffer, const char *filename);
 void terminate(bool condition, const char *message);
 
 int main(int argc, char *argv[])
 {
     terminate(argc != 4, "Error: Incorrect usage. Example usage: merge inventory1.dat inventory2.dat merged_inventory.dat\n");
     struct part inventory1[MAX_PARTS];
-    read_parts_file(inventory1, argv[1]);
+    size_t num_parts_inv1 = read_parts_file(inventory1, argv[1]);
     struct part inventory2[MAX_PARTS];
-    read_parts_file(inventory2, argv[2]);
+    size_t num_parts_inv2 = read_parts_file(inventory2, argv[2]);
+    size_t num_merged_parts_inv = num_parts_inv1 + num_parts_inv2;
+    struct part merged_inventory[MAX_PARTS * 2];
+    size_t merged_parts_count = 0;
+    bool found_part = false;
 
+    for (size_t merged_index = 0; merged_index < num_merged_parts_inv; ++merged_index)
+    {
+        /* code */
+    }
+    
+    qsort(merged_inventory, sizeof(struct part), num_merged_parts_inv, part_comparator);
+    
     return EXIT_SUCCESS;
 }
 
@@ -60,7 +70,7 @@ int part_comparator(const void *v1, const void *v2)
     }
 }
 
-void read_parts_file(struct part *buffer, const char *filename)
+size_t read_parts_file(struct part *buffer, const char *filename)
 {
     FILE *fpr = fopen(filename, "rb");
 
@@ -77,7 +87,7 @@ void read_parts_file(struct part *buffer, const char *filename)
     snprintf(stderr, "Failed to close %s properly.\n", fpr);
     terminate(fclose(fpr) == EOF, g_message);
 
-    g_num_parts_read += num_parts_read;
+    return num_parts_read;
 }
 
 void terminate(bool condition, const char *message)
