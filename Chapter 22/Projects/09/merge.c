@@ -24,25 +24,49 @@ struct part {
   int number;
   char name[MAX_PART_NAME_LENGTH + 1];
   int on_hand;
-} inventory[MAX_PARTS * 2];
+};
 
-size_t read_parts_file(void *restrict buffer, const char *filename);
+int part_comparator(const void *v1, const void *v2);
+void read_parts_file(struct part *buffer, const char *filename);
 void terminate(bool condition, const char *message);
 
 int main(int argc, char *argv[])
 {
     terminate(argc != 4, "Error: Incorrect usage. Example usage: merge inventory1.dat inventory2.dat merged_inventory.dat\n");
+    struct part inventory1[MAX_PARTS];
+    read_parts_file(inventory1, argv[1]);
+    struct part inventory2[MAX_PARTS];
+    read_parts_file(inventory2, argv[2]);
 
     return EXIT_SUCCESS;
 }
 
-size_t read_parts_file(void *restrict buffer, const char *filename)
+int part_comparator(const void *v1, const void *v2)
+{
+    const struct part *p1 = (struct part *)v1;
+    const struct part *p2 = (struct part *)v2;
+
+    if (p1->number < p2->number)
+    {
+        return -1;
+    }
+    else if(p1->number > p2->number)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void read_parts_file(struct part *buffer, const char *filename)
 {
     FILE *fpr = fopen(filename, "rb");
 
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error opening %s for reading.\n", filename);
     terminate(fpr == NULL, g_message);
-    size_t num_parts_read = fread(&inventory[g_num_parts_read], sizeof(struct part), MAX_PARTS, fpr);
+    size_t num_parts_read = fread(buffer, sizeof(struct part), MAX_PARTS, fpr);
 
     if (num_parts_read != MAX_PARTS)
     {
@@ -50,10 +74,10 @@ size_t read_parts_file(void *restrict buffer, const char *filename)
         terminate(feof(fpr) == 0 && ferror(fpr), g_message);
     }
 
-    snprintf("Failed to close %s properly.\n", fpr);
+    snprintf(stderr, "Failed to close %s properly.\n", fpr);
     terminate(fclose(fpr) == EOF, g_message);
 
-    ++g_num_parts_read;
+    g_num_parts_read += num_parts_read;
 }
 
 void terminate(bool condition, const char *message)
