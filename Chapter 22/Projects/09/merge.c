@@ -42,10 +42,12 @@ int main(int argc, char *argv[])
     bool found_part = false;
     memcpy(merged_inventory, inventory1, sizeof(struct part) * num_parts_inv1);
     size_t merged_parts_count = num_parts_inv1;
+    unsigned int offset = 0;
+    size_t inventory2_index;
 
     for (size_t merged_inventory_index = 0; merged_inventory_index < num_parts_inv1; ++merged_inventory_index)
     {
-        for (size_t inventory2_index = 0; inventory2_index < num_parts_inv2; ++inventory2_index)
+        for (inventory2_index = 0; inventory2_index < num_parts_inv2 && found_part == false; ++inventory2_index)
         {
             if (merged_inventory[merged_inventory_index].number = inventory2[inventory2_index].number)
             {
@@ -54,18 +56,32 @@ int main(int argc, char *argv[])
                     g_message,
                     MAX_MESSAGE_SIZE,
                     "Error: Part name mismatch (%s vs %s) for part number %d of %s and %s\n",
-                    
-                )
+                    merged_inventory[merged_inventory_index].name,
+                    inventory2[inventory2_index].name,
+                    inventory2[inventory2_index].number,
+                    argv[1],
+                    argv[2]
+                );
                 terminate(merged_inventory[merged_inventory_index].name != inventory2[inventory2_index].name, g_message);
+                merged_inventory[merged_inventory_index].on_hand += inventory2[inventory2_index].on_hand;
+                found_part = true;
             }
         }
-        
+
+        if (found_part == false)
+        {
+            merged_inventory[num_parts_inv1 + offset].name = inventory2[inventory2_index].name;
+            merged_inventory[num_parts_inv1 + offset].number = inventory2[inventory2_index].number;
+            merged_inventory[num_parts_inv1 + offset].on_hand = inventory2[inventory2_index].on_hand;
+            inventory2_index = 0;
+            ++offset;
+        }
+        else
+        {
+            found_part = false;
+        }
     }
-    
-    
-    
-    
-    
+
     qsort(merged_inventory, sizeof(struct part), num_merged_parts_inv, part_comparator);
     
     return EXIT_SUCCESS;
