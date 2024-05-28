@@ -11,6 +11,7 @@ command line.
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_FILE_SIZE 255
 #define MAX_MESSAGE_SIZE 512
@@ -38,13 +39,32 @@ int main(int argc, char *argv[])
     size_t num_parts_inv2 = read_parts_file(inventory2, argv[2]);
     size_t num_merged_parts_inv = num_parts_inv1 + num_parts_inv2;
     struct part merged_inventory[MAX_PARTS * 2];
-    size_t merged_parts_count = 0;
     bool found_part = false;
+    memcpy(merged_inventory, inventory1, sizeof(struct part) * num_parts_inv1);
+    size_t merged_parts_count = num_parts_inv1;
 
-    for (size_t merged_index = 0; merged_index < num_merged_parts_inv; ++merged_index)
+    for (size_t merged_inventory_index = 0; merged_inventory_index < num_parts_inv1; ++merged_inventory_index)
     {
-        /* code */
+        for (size_t inventory2_index = 0; inventory2_index < num_parts_inv2; ++inventory2_index)
+        {
+            if (merged_inventory[merged_inventory_index].number = inventory2[inventory2_index].number)
+            {
+                snprintf
+                (
+                    g_message,
+                    MAX_MESSAGE_SIZE,
+                    "Error: Part name mismatch (%s vs %s) for part number %d of %s and %s\n",
+                    
+                )
+                terminate(merged_inventory[merged_inventory_index].name != inventory2[inventory2_index].name, g_message);
+            }
+        }
+        
     }
+    
+    
+    
+    
     
     qsort(merged_inventory, sizeof(struct part), num_merged_parts_inv, part_comparator);
     
