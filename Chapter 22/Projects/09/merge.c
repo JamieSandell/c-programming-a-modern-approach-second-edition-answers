@@ -42,14 +42,13 @@ int main(int argc, char *argv[])
     bool found_part = false;
     memcpy(merged_inventory, inventory1, sizeof(struct part) * num_parts_inv1);
     size_t merged_parts_count = num_parts_inv1;
-    unsigned int offset = 0;
-    size_t inventory2_index;
 
+    // Merge
     for (size_t merged_inventory_index = 0; merged_inventory_index < num_parts_inv1; ++merged_inventory_index)
     {
-        for (inventory2_index = 0; inventory2_index < num_parts_inv2 && found_part == false; ++inventory2_index)
+        for (size_t inventory2_index = 0; inventory2_index < num_parts_inv2 && found_part == false; ++inventory2_index)
         {
-            if (merged_inventory[merged_inventory_index].number = inventory2[inventory2_index].number)
+            if (merged_inventory[merged_inventory_index].number == inventory2[inventory2_index].number)
             {
                 snprintf
                 (
@@ -62,27 +61,40 @@ int main(int argc, char *argv[])
                     argv[1],
                     argv[2]
                 );
-                terminate(merged_inventory[merged_inventory_index].name != inventory2[inventory2_index].name, g_message);
+                terminate(strcmp(merged_inventory[merged_inventory_index].name, inventory2[inventory2_index].name) != 0, g_message);
                 merged_inventory[merged_inventory_index].on_hand += inventory2[inventory2_index].on_hand;
                 found_part = true;
             }
         }
 
+        found_part = false;
+    }
+
+    unsigned int offset = 0;
+
+    // Add
+    for (size_t inventory2_index = 0; inventory2_index < num_parts_inv2; ++inventory2_index)
+    {
         if (found_part == false)
         {
-            merged_inventory[num_parts_inv1 + offset].name = inventory2[inventory2_index].name;
+            strcpy(merged_inventory[num_parts_inv1 + offset].name, inventory2[inventory2_index].name);
             merged_inventory[num_parts_inv1 + offset].number = inventory2[inventory2_index].number;
             merged_inventory[num_parts_inv1 + offset].on_hand = inventory2[inventory2_index].on_hand;
             inventory2_index = 0;
             ++offset;
-        }
-        else
-        {
-            found_part = false;
+            merged_parts_count += offset;
         }
     }
+    
 
+    FILE *fpw = fopen(argv[3], "wb");
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to open %s for writing.\n", argv[3]);
     qsort(merged_inventory, sizeof(struct part), num_merged_parts_inv, part_comparator);
+    terminate(fpw == NULL, g_message);
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Error writing to %s\n", argv[3]);
+    terminate(fwrite(merged_inventory, sizeof(struct part), merged_parts_count, fpw) != merged_parts_count, g_message);
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Error closing %s\n", argv[3]);
+    terminate(fclose(fpw) == EOF, g_message);
     
     return EXIT_SUCCESS;
 }
@@ -106,6 +118,10 @@ int part_comparator(const void *v1, const void *v2)
     }
 }
 
+/// @brief Read a parts file, terminate if any file errors.
+/// @param buffer Store the contents of the parts file.
+/// @param filename Parts file to read.
+/// @return Number of parts read.
 size_t read_parts_file(struct part *buffer, const char *filename)
 {
     FILE *fpr = fopen(filename, "rb");
@@ -120,7 +136,7 @@ size_t read_parts_file(struct part *buffer, const char *filename)
         terminate(feof(fpr) == 0 && ferror(fpr), g_message);
     }
 
-    snprintf(stderr, "Failed to close %s properly.\n", fpr);
+    snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to close %s properly.\n", filename);
     terminate(fclose(fpr) == EOF, g_message);
 
     return num_parts_read;
