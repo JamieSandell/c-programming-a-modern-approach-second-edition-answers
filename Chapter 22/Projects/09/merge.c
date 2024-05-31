@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     size_t num_parts_inv1 = read_parts_file(inventory1, argv[1]);
     struct part inventory2[MAX_PARTS];
     size_t num_parts_inv2 = read_parts_file(inventory2, argv[2]);
-    size_t num_merged_parts_inv = num_parts_inv1 + num_parts_inv2;
     struct part merged_inventory[MAX_PARTS * 2];
     bool found_part = false;
     memcpy(merged_inventory, inventory1, sizeof(struct part) * num_parts_inv1);
@@ -100,7 +99,7 @@ int main(int argc, char *argv[])
 
     FILE *fpw = fopen(argv[3], "wb");
     snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to open %s for writing.\n", argv[3]);
-    qsort(merged_inventory, sizeof(struct part), num_merged_parts_inv, part_comparator);
+    qsort(merged_inventory, merged_parts_count, sizeof(struct part), part_comparator);
     terminate(fpw == NULL, g_message);
     snprintf(g_message, MAX_MESSAGE_SIZE, "Error writing to %s\n", argv[3]);
     terminate(fwrite(merged_inventory, sizeof(struct part), merged_parts_count, fpw) != merged_parts_count, g_message);
