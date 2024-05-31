@@ -19,11 +19,13 @@ minates). As it reads parts from a file, the r operation will rebuild the list o
 /* inventory2.c (Chapter 17, page 434) */
 /* Maintains a parts database (linked list version) */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "readline.h"
 
 #define MAX_FILENAME_LENGTH 255
+#define MAX_MESSAGE_LENGTH 512
 #define NAME_LEN 25
 
 struct part {
@@ -35,6 +37,8 @@ struct part {
 
 struct part *inventory = NULL;   /* points to first part */
 
+char message[MAX_MESSAGE_LENGTH];
+
 void dump(void);
 struct part *find_part(int number);
 void insert(void);
@@ -42,7 +46,8 @@ void restore(void);
 void search(void);
 void update(void);
 void print(void);
-void write_bytes(const void *buffer, size_t element_size, size_t element_count, FILE *stream);
+void terminate(const char *message);
+void write_bytes(const void *buffer, size_t element_size, size_t element_count, FILE *stream, const char *filename);
 
 /**********************************************************
  * main: Prompts the user to enter an operation code,     *
@@ -102,8 +107,15 @@ void dump(void)
 
   while (p != NULL)
   {
-    write_bytes(p->name, 1, strlen(p->name), fpw);
+    write_bytes(p->name, 1, strlen(p->name), fpw, filename);
+    write_bytes(&(p->number), sizeof(int), 1, fpw, filename);
+    write_bytes(&(p->on_hand), sizeof(int), 1, fpw, filename);
     p = p->next;
+  }
+
+  if (fclose(fpw) == EOF)
+  {
+    fprintf(stderr, "Error: failed to close %s after writing.\n", filename);
   }
 }
 
@@ -230,12 +242,26 @@ void print(void)
            p->on_hand);
 }
 
+/// @brief If the condition is true, prints message and terminates.
+/// @param condition 
+/// @param message 
+void terminate(bool condition, const char *message)
+{
+  if (condition)
+  {
+    fprintf(stderr, "%s", message);
+    exit(EXIT_FAILURE);
+  }
+}
+
 /// @brief Wrapper for fwrite that prints an error if one occurred and terminates.
 /// @param buffer bytes to write
 /// @param element_size 
 /// @param element_count 
 /// @param stream output stream
-void write_bytes(const void *buffer, size_t element_size, size_t element_count, FILE *stream)
+/// @param filename name of file attempting to write to.
+void write_bytes(const void *buffer, size_t element_size, size_t element_count, FILE *stream, const char *filename)
 {
-  if (fwrite(buffer, element_size, element_count, stream) != element_count);
+  snprintf(message, MAX_MESSAGE_LENGTH, "Failed to write to %s\n", filename);
+  terminate(fwrite(buffer, element_size, element_count, stream) != element_count, message);
 }
