@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             merged_inventory[num_parts_inv1 + offset].number = inventory2[inventory2_index].number;
             merged_inventory[num_parts_inv1 + offset].on_hand = inventory2[inventory2_index].on_hand;
             ++offset;
-            merged_parts_count += offset;
+            ++merged_parts_count;
         }
     }    
 
