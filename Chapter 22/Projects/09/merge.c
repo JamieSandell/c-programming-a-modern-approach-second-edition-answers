@@ -75,17 +75,28 @@ int main(int argc, char *argv[])
     // Add
     for (size_t inventory2_index = 0; inventory2_index < num_parts_inv2; ++inventory2_index)
     {
+        for (size_t inventory1_index = 0; inventory1_index < num_parts_inv1; ++inventory1_index)
+        {
+            if (inventory2[inventory2_index].number == inventory1[inventory1_index].number)
+            {
+                found_part = true;
+                break;
+            }
+            else
+            {
+                found_part = false;
+            }
+        }
+
         if (found_part == false)
         {
             strcpy(merged_inventory[num_parts_inv1 + offset].name, inventory2[inventory2_index].name);
             merged_inventory[num_parts_inv1 + offset].number = inventory2[inventory2_index].number;
             merged_inventory[num_parts_inv1 + offset].on_hand = inventory2[inventory2_index].on_hand;
-            inventory2_index = 0;
             ++offset;
             merged_parts_count += offset;
         }
-    }
-    
+    }    
 
     FILE *fpw = fopen(argv[3], "wb");
     snprintf(g_message, MAX_MESSAGE_SIZE, "Failed to open %s for writing.\n", argv[3]);
