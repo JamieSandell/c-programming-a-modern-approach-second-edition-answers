@@ -306,13 +306,26 @@ void restore(void)
   char name[NAME_LEN + 1];
   int number;
   int on_hand;
+  int c;
 
-  while (feof(fpr) != EOF)
+  while ((c = fgetc(fpr)) != EOF)
   {
+    if (ungetc(c, fpr) == EOF)
+    {
+      fprintf(stderr, "Error putting character back on stream whilst reading %s\n", filename);
+      return;
+    }
+
     read_bytes(name, 1, NAME_LEN + 1, fpr, filename);
     read_bytes(&number, sizeof(int), 1, fpr, filename);
     read_bytes(&on_hand, sizeof(int), 1, fpr, filename);
     insert_with_params(number, on_hand, name);
+  }
+
+  if (ferror(fpr))
+  {
+    fprintf(stderr, "Error whilst reading %s", filename);
+    return;
   }
 
   if (fclose(fpr) == EOF)
