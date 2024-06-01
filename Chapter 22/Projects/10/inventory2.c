@@ -22,6 +22,7 @@ minates). As it reads parts from a file, the r operation will rebuild the list o
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "readline.h"
 
 #define MAX_FILENAME_LENGTH 255
@@ -42,11 +43,13 @@ char message[MAX_MESSAGE_LENGTH];
 void dump(void);
 struct part *find_part(int number);
 void insert(void);
+void insert_with_params(int number, int on_hand, const char *name);
+void read_bytes(void *buffer, size_t element_size, size_t element_count, FILE *stream, const char *filename);
 void restore(void);
 void search(void);
 void update(void);
 void print(void);
-void terminate(const char *message);
+void terminate(bool condition, const char *message);
 void write_bytes(const void *buffer, size_t element_size, size_t element_count, FILE *stream, const char *filename);
 
 /**********************************************************
@@ -66,7 +69,11 @@ int main(void)
     while (getchar() != '\n')   /* skips to end of line */
       ;
     switch (code) {
+      case 'd': dump();
+                break;
       case 'i': insert();
+                break;
+      case 'r': restore();
                 break;
       case 's': search();
                 break;
@@ -107,7 +114,7 @@ void dump(void)
 
   while (p != NULL)
   {
-    write_bytes(p->name, 1, strlen(p->name), fpw, filename);
+    write_bytes(p->name, 1, NAME_LEN + 1, fpw, filename);
     write_bytes(&(p->number), sizeof(int), 1, fpw, filename);
     write_bytes(&(p->on_hand), sizeof(int), 1, fpw, filename);
     p = p->next;
@@ -148,6 +155,25 @@ struct part *find_part(int number)
  **********************************************************/
 void insert(void)
 {
+  int number;
+  int on_hand;
+  char name[NAME_LEN + 1];
+
+  printf("Enter part number: ");
+  scanf("%d", &number);
+  printf("Enter part name: ");
+  read_line(name, NAME_LEN);
+  printf("Enter quantity on hand: ");
+  scanf("%d", &on_hand);
+  insert_with_params(number, on_hand, name);
+}
+
+/// @brief Adds a part to the inventory without user input.
+/// @param number 
+/// @param on_hand 
+/// @param name 
+void insert_with_params(int number, int on_hand, const char *name)
+{
   struct part *cur, *prev, *new_node;
 
   new_node = malloc(sizeof(struct part));
@@ -156,8 +182,7 @@ void insert(void)
     return;
   }
 
-  printf("Enter part number: ");
-  scanf("%d", &new_node->number);
+  new_node->number = number;
 
   for (cur = inventory, prev = NULL;
        cur != NULL && new_node->number > cur->number;
@@ -169,16 +194,14 @@ void insert(void)
     return;
   }
 
-  printf("Enter part name: ");
-  read_line(new_node->name, NAME_LEN);
-  printf("Enter quantity on hand: ");
-  scanf("%d", &new_node->on_hand);
+  strncpy(new_node->name, name, NAME_LEN + 1);
+  new_node->on_hand = on_hand;
 
   new_node->next = cur;
   if (prev == NULL)
     inventory = new_node;
   else
-    prev->next = new_node;
+    prev->next = new_node; 
 }
 
 /**********************************************************
@@ -242,6 +265,62 @@ void print(void)
            p->on_hand);
 }
 
+/**********************************************************
+ * restore: Clears the inventory and then restores the
+ *          inventory from a a binary file.               *
+ **********************************************************/
+void restore(void)
+{
+  printf("Enter a file to restore from, e.g. inventory.dat ");
+  char filename[MAX_FILENAME_LENGTH];
+
+  if (read_line(filename, MAX_FILENAME_LENGTH) < 1)
+  {
+    fprintf(stderr, "Error: Filename must be at least 1 character long.\n");
+    return;
+  }
+
+  FILE *fpr = fopen(filename, "rb");
+
+  if (fpr == NULL)
+  {
+    fprintf(stderr, "Error opening %s for reading.\n", filename);
+    return;
+  }
+
+  if (inventory != NULL)
+  {
+    struct part *current = inventory;
+    struct part *next;
+
+    while (current != NULL)
+    {
+      next = current->next;
+      free(current);
+      current = next;
+    }
+
+    inventory = NULL;
+  }
+
+  char name[NAME_LEN + 1];
+  int number;
+  int on_hand;
+
+  while (feof(fpr) != EOF)
+  {
+    read_bytes(name, 1, NAME_LEN + 1, fpr, filename);
+    read_bytes(&number, sizeof(int), 1, fpr, filename);
+    read_bytes(&on_hand, sizeof(int), 1, fpr, filename);
+    insert_with_params(number, on_hand, name);
+  }
+
+  if (fclose(fpr) == EOF)
+  {
+    fprintf(stderr, "Error closing %s\n", filename);
+  }
+}
+
 /// @brief If the condition is true, prints message and terminates.
 /// @param condition 
 /// @param message 
@@ -252,6 +331,18 @@ void terminate(bool condition, const char *message)
     fprintf(stderr, "%s", message);
     exit(EXIT_FAILURE);
   }
+}
+
+/// @brief Wrapper for fread that prints an error if on occurred and terminates.
+/// @param buffer Bytes to read to.
+/// @param element_size 
+/// @param element_count 
+/// @param stream Input stream.
+/// @param filename Name of file attempting to read from.
+void read_bytes(void *buffer, size_t element_size, size_t element_count, FILE *stream, const char *filename)
+{
+  snprintf(message, MAX_MESSAGE_LENGTH, "Failed to read from %s\n", filename);
+  terminate(fread(buffer, element_size, element_count, stream) != element_count, message);
 }
 
 /// @brief Wrapper for fwrite that prints an error if one occurred and terminates.
