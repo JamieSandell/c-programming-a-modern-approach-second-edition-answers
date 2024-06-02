@@ -25,15 +25,16 @@ Have the program obtain the file name from the command line.
 #include <stdlib.h>
 
 #define MAX_MESSAGE_LENGTH 512
+#define MAX_LINE_LENGTH 256
 
 void terminate(bool condition, const char *message);
 
 int main(int argc, char *argv[])
 {
     char message[MAX_MESSAGE_LENGTH];
-    snprintf(message, MAX_MESSAGE_LENGTH, "Error: incorrect program usage. Expected usage: main items.dat\n");
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error: incorrect program usage. Expected usage: main items.txt\n");
     terminate(argc != 2, message);
-    FILE *fpr = fopen(argv[1], "rb");
+    FILE *fpr = fopen(argv[1], "r");
 
     if (fpr == NULL)
     {
@@ -41,13 +42,17 @@ int main(int argc, char *argv[])
         terminate(true, message);
     }
 
-    snprintf(message, MAX_MESSAGE_LENGTH, "Error seeking to the end of %s\n", argv[1]);
-    terminate(fseek(fpr, 0L, SEEK_END), message);
-    long file_size = ftell(fpr);
-    terminate(file_size == 1)
-
+    char line[MAX_LINE_LENGTH];
     int item, year, month, day;
     float price;
+
+    while (fgets(line, MAX_LINE_LENGTH, fpr) != NULL)
+    {
+        if (sscanf(line, "%d,%f,%d/%d/%d", &item, &price, &month, &day, &year) != 5)
+        {
+
+        }
+    }
 
     printf("Enter item number: ");
     scanf("%d", &item);
