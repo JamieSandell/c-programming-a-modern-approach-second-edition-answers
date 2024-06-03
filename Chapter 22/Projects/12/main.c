@@ -45,26 +45,14 @@ int main(int argc, char *argv[])
     char line[MAX_LINE_LENGTH];
     int item, year, month, day;
     float price;
+    printf("Item\t\tUnit\t\tPurchase\n\t\tPrice\t\tDate\n");
 
     while (fgets(line, MAX_LINE_LENGTH, fpr) != NULL)
     {
-        if (sscanf(line, "%d,%f,%d/%d/%d", &item, &price, &month, &day, &year) != 5)
-        {
-
-        }
+        snprintf(message, MAX_MESSAGE_LENGTH, "Error parsing %s in %s\n", line, argv[1]);
+        terminate(sscanf(line, "%d,%f,%d/%d/%d", &item, &price, &month, &day, &year) != 5, message);
+        printf("%d\t\t$%8.2f\t%.2d/%.2d/%.4d\n", item, price, month, day, year);
     }
-
-    printf("Enter item number: ");
-    scanf("%d", &item);
-
-    printf("Enter unit price: ");
-    scanf("%f", &price);
-
-    printf("Enter purchase date (mm/dd/yyyy): ");
-    scanf("%d /%d /%d", &month, &day, &year);
-
-    printf("Item\t\tUnit\t\tPurchase\n\t\tPrice\t\tDate\n");
-    printf("%d\t\t$%8.2f\t%.2d/%.2d/%.4d\n", item, price, month, day, year);
 
     return EXIT_SUCCESS;
 }
