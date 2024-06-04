@@ -45,7 +45,6 @@ than to any of the other departure times.
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_FILE_SIZE 1024
 #define MAX_MESSAGE_SIZE 512
 
 struct flight_time
@@ -71,33 +70,13 @@ int main(int argc, char *argv[])
     snprintf(message, MAX_MESSAGE_SIZE, "Error opening %s for reading.\n", argv[1]);
     terminate(fpr == NULL, message);
 
-    snprintf(message, MAX_MESSAGE_SIZE, "Error seeking to the end of %s\n", argv[1]);
-    terminate(fseek(fpr, 0L, SEEK_END), message);
-
-    long file_size = ftell(fpr);
-    snprintf(message, MAX_MESSAGE_SIZE, "Error getting file size of %s\n", argv[1]);
-    terminate(file_size == -1L, message);
-
-    snprintf(message, MAX_MESSAGE_SIZE, "Error, %s is too big for the buffer. %ld vs %d\n", argv[1], file_size, MAX_FILE_SIZE);
-    terminate(file_size > MAX_FILE_SIZE, message);
-
-    snprintf(message, MAX_MESSAGE_SIZE, "Error seeking to the beginning of %s\n", argv[1]);
-    terminate(fseek(fpr, 0L, SEEK_SET), message);
-
-    char file_contents[MAX_FILE_SIZE];
-    snprintf(message, MAX_MESSAGE_SIZE, "Error reading the contents of %s\n", argv[1]);
-    terminate(fread(file_contents, 1, MAX_FILE_SIZE, fpr) != (size_t) file_size, message);
-
-    snprintf(message, MAX_MESSAGE_SIZE, "Error closing %s\n", argv[1]);
-    terminate(fclose(fpr) == EOF, message);
-
     int departure_time_hours;
     int departure_time_minutes;
     int arrival_time_hours;
     int arrival_time_minutes;
     struct flight_time *head = NULL;
 
-    while (sscanf(file_contents, " %d:%d %d:%d ", &departure_time_hours, &departure_time_minutes, &arrival_time_hours, &arrival_time_minutes) == 4)
+    while (fscanf(fpr, " %d:%d %d:%d ", &departure_time_hours, &departure_time_minutes, &arrival_time_hours, &arrival_time_minutes) == 4)
     {
         struct flight_time *new_node = malloc(sizeof(struct flight_time));
         snprintf(message, MAX_MESSAGE_SIZE, "Error allocating memory.\n");
@@ -126,6 +105,12 @@ int main(int argc, char *argv[])
 
         last->next = new_node;        
     }
+
+    snprintf(message, MAX_MESSAGE_SIZE, "Error reading the contents of %s\n", argv[1]);
+    terminate(ferror(fpr), message);
+
+    snprintf(message, MAX_MESSAGE_SIZE, "Error closing %s\n", argv[1]);
+    terminate(fclose(fpr) == EOF, message);
 
     snprintf(message, MAX_MESSAGE_SIZE, "Error head is NULL.\n");
     terminate(head == NULL, message);
