@@ -42,8 +42,8 @@ expression for lower-case letters.)
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define LENGTH 80
 #define MAX_FILENAME_LENGTH 255
 #define MAX_MESSAGE_LENGTH 512
 #define ENC_LENGTH 4
@@ -79,41 +79,54 @@ int main(void)
     snprintf(message, MAX_MESSAGE_LENGTH, "Error: failed to open %s for reading.\n", unencrypted_filename);
     terminate(fpr == NULL, message);
 
-    char message[LENGTH] = {0};
-    int char_count = 0;
-    int shift_amount;
-    
-    while ((c = getchar()) != '\n' && char_count < LENGTH)
-    {
-        message[char_count++] = c;
-    }
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error seeking to the end of %s\n", unencrypted_filename);
+    terminate(fseek(fpr, 0L, SEEK_END), message);
+
+    long file_size = ftell(fpr);
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error: failed to get size of %s\n", unencrypted_filename);
+    terminate(file_size == -1L, message);
+
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error: failed to seek to the beginning of %s\n", unencrypted_filename);
+    terminate(fseek(fpr, 0L, SEEK_SET), message);
+
+    char *file_contents = malloc((size_t) file_size);
+    terminate(file_contents == NULL, "Error: failed to allocate memory.\n");
+
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error reading contents of %s\n", unencrypted_filename);
+    terminate(fread(file_contents, 1, file_size, fpr) != (size_t)file_size, message);
 
     printf("Enter shift amount (1 - 25): ");
+    int shift_amount;
     scanf("%d", &shift_amount);
+    char encrypted_filename[MAX_FILENAME_LENGTH + 1];
+    strcpy(encrypted_filename, unencrypted_filename);
+    strcat(encrypted_filename, ".enc");
+    
+    FILE *fpw = fopen(encrypted_filename, "w");
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error opening %s for writing.\n", encrypted_filename);
+    terminate(fpw == NULL, message);
 
-    printf("Encrypted message: ");
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error writing to %s\n", encrypted_filename);
 
-    for (int i = 0; i < char_count; i++)
+    for (int i = 0; i < file_size; ++i)
     {
-        if ((message[i] < 'A' || message[i] > 'Z') && (message[i] < 'a' || message[i] > 'z'))
+        if ((file_contents[i] < 'A' || file_contents[i] > 'Z') && (file_contents[i] < 'a' || file_contents[i] > 'z'))
         {
-            putchar(message[i]);
+            terminate(fputc(file_contents[i], fpw) == EOF, message);
             continue;
         }
 
-        if (message[i] >= 'A' && message[i] <= 'Z')
+        if (file_contents[i] >= 'A' && file_contents[i] <= 'Z')
         {
-            c = ((message[i] - 'A') + shift_amount) % 26 + 'A';
+            c = ((file_contents[i] - 'A') + shift_amount) % 26 + 'A';
         }
         else
         {
-            c = ((message[i] - 'a') + shift_amount) % 26 + 'a';
+            c = ((file_contents[i] - 'a') + shift_amount) % 26 + 'a';
         }
 
-        putchar(c);
+        terminate(fputc(c, fpw) == EOF, message);
     }
-
-    putchar('\n');
 
     return EXIT_SUCCESS;
 }
