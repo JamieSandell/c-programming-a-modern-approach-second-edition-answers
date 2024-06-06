@@ -95,6 +95,11 @@ int main(void)
     snprintf(message, MAX_MESSAGE_LENGTH, "Error reading contents of %s\n", unencrypted_filename);
     terminate(fread(file_contents, 1, file_size, fpr) != (size_t)file_size, message);
 
+    if (fclose(fpr) == EOF)
+    {
+        fprintf(stderr, "Error closing %s\n", unencrypted_filename);
+    }
+
     printf("Enter shift amount (1 - 25): ");
     int shift_amount;
     scanf("%d", &shift_amount);
@@ -127,6 +132,9 @@ int main(void)
 
         terminate(fputc(c, fpw) == EOF, message);
     }
+
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error closing %s\n", encrypted_filename);
+    terminate(fclose(fpw) == EOF, message);
 
     return EXIT_SUCCESS;
 }
