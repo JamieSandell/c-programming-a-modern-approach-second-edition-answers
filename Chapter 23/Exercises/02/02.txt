@@ -1,0 +1,22 @@
+(C99) Write the following function:
+
+double evaluate_polynomial(double a[], int n, double x);
+
+The function should return the value of the polynomial anxn + an-1xn-1 + ... + a0, where the
+ai's are stored in corresponding elements of the array a, which has length n + 1. Have the
+function use Horner's Rule to compute the value of the polynomial:
+
+((...((anx + an-1)x + an-2)x + ...)x + a1)x + a0
+
+Use the fma function to perform the multiplications and additions.
+
+double evaluate_polynomial(double a[], int n, double x)
+{
+    int i = n;
+    double sum = fma(a[i], x, a[i--]);
+    while (i >= 0)
+    {
+        sum += fma(sum, x, a[i--]);
+    }
+    return sum;
+}
