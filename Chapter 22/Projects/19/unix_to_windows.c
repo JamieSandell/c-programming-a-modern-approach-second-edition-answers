@@ -19,7 +19,7 @@ void terminate(bool condition, const char *message);
 int main(int argc, char *argv[])
 {
     char message[MAX_MESSAGE_LENGTH];
-    snprintf(message, MAX_MESSAGE_LENGTH, "Incorrect usage. Example usage: windows_to_unix windows.txt unix.txt\n");
+    snprintf(message, MAX_MESSAGE_LENGTH, "Incorrect usage. Example usage: unix_to_windows unix.txt windows.txt\n");
     terminate(argc != 3, message);
 
     FILE *fpr = fopen(argv[1], "rb");
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     snprintf(message, MAX_MESSAGE_LENGTH, "Failed to allocate memory for the contents of %s\n", argv[1]);
     terminate(input_contents == NULL, message);
 
-    char *output_contents = malloc((size_t) input_file_size);
+    char *output_contents = malloc((size_t) input_file_size * 2);
     snprintf(message, MAX_MESSAGE_LENGTH, "Failed to allocate memory for the contents of %s\n", argv[2]);
     terminate(output_contents == NULL, message);
 
@@ -52,7 +52,14 @@ int main(int argc, char *argv[])
 
     while ((c = fgetc(fpr)) != EOF)
     {
-        if (c != '\r')
+        if (c == '\n')
+        {
+            snprintf(message, MAX_MESSAGE_LENGTH, "Failed to write \\r to %s\n", argv[2]);
+            terminate(fputc('\r', fpw) == EOF, message);
+            snprintf(message, MAX_MESSAGE_LENGTH, "Failed to write %c to %s\n", c, argv[2]);
+            terminate(fputc(c, fpw) == EOF, message);
+        }
+        else
         {
             snprintf(message, MAX_MESSAGE_LENGTH, "Failed to write %c to %s\n", c, argv[2]);
             terminate(fputc(c, fpw) == EOF, message);
