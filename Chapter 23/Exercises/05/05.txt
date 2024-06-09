@@ -1,0 +1,16 @@
+Using isxdigit, write a function that checks whether a string represents a valid hexadec-
+imal number (it consists solely of hexadecimal digits). If so, the function returns the value of
+the number as a long int. Otherwise, the function returns -1.
+
+long int is_valid_hex(const char *string)
+{
+	while(*s != '\0')
+	{
+		if (!isxdigit(*s))
+		{
+			return -1;
+		}
+	}
+
+	return strtol(string, NULL, 16);
+}
