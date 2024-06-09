@@ -55,12 +55,29 @@ int main(int argc, char *argv[])
             snprintf(message, MAX_MESSAGE_LENGTH, "Error reading %s\n", argv[1]);
             terminate(true, message);
         }
-
-        break;
+        else if(feof(fpr))
+        {
+            break;
+        }
     }
     
     qsort(integers, number_of_integers, sizeof(int), compare_ints);
+    printf("Largest integer: %d\n", integers[number_of_integers - 1]);
+    printf("Smallest integer: %d\n", integers[0]);
+    int average;
 
+    if (number_of_integers % 2 == 0)
+    {
+        int middle = integers[number_of_integers / 2];
+        int middle2 = integers[(number_of_integers / 2) + 1];
+        average = middle + middle2 / 2;
+    }
+    else
+    {
+        average = integers[(number_of_integers / 2)];
+    }
+
+    printf("Median: %d\n", average);
     return EXIT_SUCCESS;
 }
 
