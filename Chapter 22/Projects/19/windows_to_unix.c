@@ -36,6 +36,38 @@ int main(int argc, char *argv[])
     snprintf(message, MAX_MESSAGE_LENGTH, "Failed to seek to the beginning of file %s\n", argv[1]);
     terminate(fseek(fpr, 0L, SEEK_SET), message);
 
+    char *input_contents = malloc((size_t) input_file_size);
+    snprintf(message, MAX_MESSAGE_LENGTH, "Failed to allocate memory for the contents of %s\n", argv[1]);
+    terminate(input_contents == NULL, message);
+
+    char *output_contents = malloc((size_t) input_file_size);
+    snprintf(message, MAX_MESSAGE_LENGTH, "Failed to allocate memory for the contents of %s\n", argv[2]);
+    terminate(output_contents == NULL, message);
+
+    FILE *fpw = fopen(argv[2], "wb");
+    snprintf(message, MAX_MESSAGE_LENGTH, "Error opening %s for writing.\n", argv[2]);
+    terminate(fpw == NULL, message);
+
+    int c;
+
+    while ((c = fgetc(fpr)) != EOF)
+    {
+        if (c != '\r')
+        {
+            snprintf("Failed to write %c to %s\n", c, argv[2]);
+            terminate(fputc(c, fpw) == EOF, message);
+        }
+    }
+    
+    snprintf(message, MAX_MESSAGE_LENGTH, "Failed to read %s\n", argv[1]);
+    terminate(ferror(fpr), message);
+
+    snprintf(message, MAX_MESSAGE_LENGTH, "Failed to close to %s\n", argv[2]);
+    terminate(fclose(fpw), message);
+
+    snprintf(message, MAX_MESSAGE_LENGTH, "Failed to close %s\n", argv[1]);
+    terminate(fclose(fpr), message);
+
     return EXIT_SUCCESS;
 }
 
