@@ -60,10 +60,12 @@ int main(void)
 
     printf("Testing my_strset.\n");
     char c = '!';
-    printf("%s filled with %c is: %s\n\n", jamie, c, my_strset(jamie, c));
+    char *original = my_strdup(jamie);
+    printf("%s filled with %c is: %s\n\n", original, c, my_strset(jamie, c));
 
     free(dup_jamie);
     free(jamie_lower);
+    free(original);
 
     return EXIT_SUCCESS;
 }
@@ -115,17 +117,20 @@ char* my_strlwr(char *s)
 
 char* my_strrev(char *s)
 {
-    char *end = s + strlen(s) - 1;
-    char *start = s;
+    char *original = my_strdup(s);
+    char *end = original + strlen(original) - 1;
+    char *start = original;
     char *current = s;
 
-    while (end != start)
+    while (end >= start)
     {
         *current = *end;
         ++current;
         --end;
     }
     
+    free(original);
+
     return s;
 }
 
