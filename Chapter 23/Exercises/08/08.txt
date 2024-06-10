@@ -1,0 +1,19 @@
+Use strchr to write the following function:
+
+int numchar(const char *s, char ch);
+
+numchar returns the number of times each character ch occurs in the string s.
+
+int numchar(const char *s, char ch)
+{
+	int numchar = 0;
+	char *p = strchr(s, ch);
+
+	while (p != NULL)
+	{
+		++numchar;
+		p = strchr(s + 1, ch);
+	}
+
+	return numchar;
+}
