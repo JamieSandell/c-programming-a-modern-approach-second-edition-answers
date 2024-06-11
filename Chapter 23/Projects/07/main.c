@@ -17,7 +17,7 @@ int main(void)
     char line[MAX_LINE_LENGTH];
     char *p;
 
-    while (*(fgets(line, MAX_LINE_LENGTH, stdin)) != EOF)
+    while (fgets(line, MAX_LINE_LENGTH, stdin))
     {
         p = line;
 
@@ -30,11 +30,6 @@ int main(void)
                 if (isspace(*p) || *p == '\0')
                 {
                     ++sentence_count;
-
-                    if (*p != '\0')
-                    {
-                        ++p;
-                    }
                 }
 
                 continue;
