@@ -18,6 +18,12 @@ int main(void)
     int n;
     scanf("%d", &n);
     struct tm t;
-    
+    t.tm_mon = month - 1;
+    t.tm_mday = day + n;
+    t.tm_year = year - 1900;
+    time_t time_info = mktime(&t);
+    time_info = localtime(&t);
+    printf("%s", asctime(time_info));
+
     return EXIT_SUCCESS;
 }
