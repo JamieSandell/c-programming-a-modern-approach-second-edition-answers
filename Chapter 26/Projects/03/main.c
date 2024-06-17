@@ -6,8 +6,9 @@ an array of 1000 integers that are originally in reverse order. Run the program 
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-#define NUM_OF_INTS 1000
+#define NUM_OF_INTS 100000
 
 int comparator(const void *a, const void *b);
 
@@ -26,14 +27,17 @@ int main(void)
         numbers[i] = NUM_OF_INTS - i;
     }
 
+    clock_t time_req = clock();
     qsort(numbers, NUM_OF_INTS, sizeof(int), comparator);
-
+    time_req = clock() - time_req;
+    /*
     for (int i = 0; i < NUM_OF_INTS; ++i)
     {
         printf("%d\n", numbers[i]);
     }
-
+    */
     free(numbers);
+    printf("Processor time taken for reversing %d ints: %f seconds.\n", NUM_OF_INTS, (float)time_req / CLOCKS_PER_SEC);
 
     return EXIT_SUCCESS;
 }
