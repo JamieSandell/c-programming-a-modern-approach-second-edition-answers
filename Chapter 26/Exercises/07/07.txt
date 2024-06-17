@@ -1,0 +1,8 @@
+Explain the meaning of the following statement, assuming that value is a variable of type
+long int and p is a variable of type char *:
+
+value = strtol(p, &p, 10);
+
+Converts the value pointed to by p to a long int and stores it in value.
+The second parameter is the endptr and if it's not NULL will point to the next character after the number.
+Third parameter is the base.
