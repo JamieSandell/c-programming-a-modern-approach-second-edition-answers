@@ -7,6 +7,8 @@ then prints the date that's n days later.
 #include <stdlib.h>
 #include <time.h>
 
+#define BUFFER_SIZE 11
+
 int main(void)
 {
     printf("Enter date in mm-dd-yyyy format: ");
@@ -22,8 +24,9 @@ int main(void)
     t.tm_mday = day + n;
     t.tm_year = year - 1900;
     time_t time_info = mktime(&t);
-    time_info = localtime(&t);
-    printf("%s", asctime(time_info));
-
+    struct tm *t2 = localtime(&time_info);
+    char buffer[BUFFER_SIZE];
+    strftime(buffer, BUFFER_SIZE, "%Y-%m-%d", t2);
+    puts(buffer);
     return EXIT_SUCCESS;
 }
